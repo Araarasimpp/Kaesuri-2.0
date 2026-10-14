@@ -3,12 +3,12 @@
 // Se agrega en styleUrls junto al .scss propio de cada página.
 
 .page {
-  max-width: 760px;
+  max-width: 780px;
   margin: 0 auto;
-  padding: 20px 16px 32px;
+  padding: 28px 20px 40px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
   color: var(--text);
 }
 
@@ -16,19 +16,20 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
 }
 
 .head h1 {
   margin: 0;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
 }
 
 .fecha {
-  margin: 0 0 2px;
-  font-size: 13px;
+  margin: 4px 0 0;
+  font-size: var(--fs-sm);
   color: var(--text-soft);
 }
 
@@ -38,8 +39,9 @@
 
 h2 {
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 // ---------- Botones ----------
@@ -47,20 +49,20 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 40px;
-  padding: 0 14px;
+  gap: 8px;
+  height: 42px;
+  padding: 0 16px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--fs-base);
+  font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 
 .btn ion-icon {
@@ -69,6 +71,10 @@ h2 {
 
 .btn:hover {
   border-color: var(--text-muted);
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn-primary {
@@ -83,62 +89,70 @@ h2 {
 }
 
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: progress;
+  transform: none;
 }
 
 .btn-block {
   width: 100%;
-  height: 48px;
-  font-size: 15px;
+  height: 52px;
+  font-size: var(--fs-md);
 }
 
-// ---------- KPIs ----------
+// ---------- Cifras ----------
+// Tira de cifras como columnas de un tablero: filete arriba, etiqueta en
+// mayúscula pequeña y la cifra grande debajo. Sin cajas.
 .kpis {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  overflow: hidden;
+  border-top: 1px solid var(--border-strong);
 }
 
 .kpi {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 14px 16px;
+  gap: 6px;
+  padding: 14px 16px 2px 0;
   min-width: 0;
 }
 
 .kpi + .kpi {
+  padding-left: 16px;
   border-left: 1px solid var(--border);
 }
 
 .kpi-label {
-  font-size: 12px;
-  color: var(--text-soft);
-}
-
-.kpi-valor {
-  font-size: 20px;
+  font-size: var(--fs-micro);
   font-weight: 600;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-}
-
-.kpi-nota {
-  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   color: var(--text-muted);
 }
 
+.kpi-valor {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-nota {
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
 .kpi-principal .kpi-valor {
+  font-size: var(--fs-num);
   color: var(--accent);
 }
 
 // ---------- Panel ----------
 .panel {
-  padding: 16px;
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -150,18 +164,18 @@ h2 {
   align-items: flex-start;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .panel-sub {
-  margin: 3px 0 0;
-  font-size: 13px;
+  margin: 4px 0 0;
+  font-size: var(--fs-sm);
   color: var(--text-soft);
 }
 
 .panel-sub strong {
   color: var(--text);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .controles {
@@ -174,36 +188,47 @@ h2 {
 .segmented,
 .tabs {
   display: inline-flex;
-  padding: 2px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
+  padding: 3px;
+  border-radius: var(--radius);
   background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 
 .segmented button,
 .tabs button {
-  height: 30px;
-  padding: 0 10px;
+  height: 32px;
+  padding: 0 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: 7px;
   background: none;
   color: var(--text-soft);
-  font-size: 13px;
-  font-weight: 500;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.segmented button:hover,
+.tabs button:hover {
+  color: var(--text);
 }
 
 .segmented button.on,
 .tabs button.on {
   background: var(--surface);
   color: var(--text);
-  box-shadow: 0 1px 2px rgba(22, 24, 29, 0.08), 0 0 0 1px var(--border);
+  box-shadow: 0 0 0 1px var(--border-strong);
 }
 
 .tabs button .num {
-  margin-left: 2px;
+  margin-left: 4px;
   color: var(--text-muted);
+}
+
+.tabs button.on .num {
+  color: var(--accent);
 }
 
 // ---------- Vacío y carga ----------
@@ -212,12 +237,12 @@ h2 {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 28px 16px;
+  padding: 36px 20px;
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-lg);
   text-align: center;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: var(--fs-base);
+  line-height: 1.55;
   color: var(--text-soft);
 }
 
@@ -227,18 +252,18 @@ h2 {
 }
 
 .vacio .btn {
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .vacio-titulo {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: var(--fs-md);
+  font-weight: 700;
   color: var(--text);
 }
 
 .sk {
   display: block;
-  border-radius: 4px;
+  border-radius: 6px;
   background: var(--surface-2);
   animation: pulso 1.2s ease-in-out infinite;
 }
@@ -249,9 +274,9 @@ h2 {
 }
 
 .sk-b {
-  width: 40%;
-  height: 18px;
-  margin-top: 6px;
+  width: 45%;
+  height: 22px;
+  margin-top: 8px;
 }
 
 @keyframes pulso {
@@ -263,24 +288,53 @@ h2 {
 // ---------- Celular ----------
 @media (max-width: 640px) {
   .page {
-    padding: 16px 14px 24px;
-    gap: 20px;
+    padding: 20px 16px 28px;
+    gap: 24px;
   }
 
-  .kpis {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .head h1 {
+    font-size: 24px;
   }
 
-  .kpi:nth-child(3) {
-    border-left: none;
+  // Tira horizontal de cifras que se desliza con el dedo
+  .kpis:not(.kpis-3) {
+    display: flex;
+    margin: 0 -16px;
+    padding: 0;
+    overflow-x: auto;
+    scroll-padding: 0 16px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    border-top: none;
   }
 
-  .kpi:nth-child(n + 3) {
-    border-top: 1px solid var(--border);
+  .kpis:not(.kpis-3)::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kpis:not(.kpis-3) .kpi {
+    flex: 0 0 auto;
+    min-width: 42%;
+    padding: 14px 16px 2px;
+    border-top: 1px solid var(--border-strong);
+    scroll-snap-align: start;
+  }
+
+  .kpis:not(.kpis-3) .kpi:first-child {
+    margin-left: 16px;
+    padding-left: 0;
+  }
+
+  .kpis:not(.kpis-3) .kpi:last-child {
+    margin-right: 16px;
   }
 
   .kpi-valor {
-    font-size: 18px;
+    font-size: 20px;
+  }
+
+  .kpi-principal .kpi-valor {
+    font-size: 26px;
   }
 
   .controles {

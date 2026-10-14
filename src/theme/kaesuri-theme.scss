@@ -1,92 +1,126 @@
 // src/theme/kaesuri-theme.scss
-// Sistema visual de Home ALS.
-// Neutros + un solo azul para acciones. El color de estado solo se usa para estados.
+// Sistema visual de Home ALS: "tablero de despacho".
+// Fondo lavanda casi blanco, tinta índigo profunda, un solo índigo para acciones
+// y "imanes" de color sólido para el estado de cada pedido.
 // Las variables --k-* del tema anterior quedan como alias al final, para que las
 // pantallas que aún no se rediseñan tomen la paleta nueva sin tocarlas.
 
 :root {
   // Tipografía
-  --ui-font: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ui-font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  // Escala tipográfica
+  --fs-micro: 11px; // etiquetas en mayúscula
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-base: 14px;
+  --fs-md: 15px;
+  --fs-lg: 17px;
+  --fs-xl: 22px;
+  --fs-2xl: 28px;
+  --fs-num: 30px; // cifras protagonistas
+  --tracking-label: 0.07em;
+  --tracking-tight: -0.025em;
 
   // Superficies
-  --bg: #fbfbfc;
+  --bg: #f8f8fc;
   --surface: #ffffff;
-  --surface-2: #f7f8fa; // cabeceras de grupo, campos de solo lectura
-  --sidebar: #f4f5f7;
-  --hover: #eceef1;
-  --selected: #e6e9ee;
+  --surface-2: #f3f2fa; // cabeceras de grupo, campos de solo lectura
+  --sidebar: #f8f8fc;
+  --hover: #efeef8;
+  --selected: #e9e7fb;
 
   // Texto
-  --text: #16181d;
-  --text-2: #3f4550;
-  --text-soft: #5c6370;
-  --text-muted: #6b7280;
+  --text: #15142b;
+  --text-2: #34324f;
+  --text-soft: #5e5a7e;
+  --text-muted: #6b6890;
 
-  // Bordes
-  --border: #e6e8ec;
-  --border-soft: #f0f1f4;
-  --border-strong: #d5d8de;
+  // Bordes (filetes finos)
+  --border: #e5e4f0;
+  --border-soft: #efeef6;
+  --border-strong: #d3d1e3;
 
-  // Acento (acciones, selección, foco)
-  --accent: #3e5bd9;
-  --accent-hover: #2d47b8;
-  --accent-soft: #dce2fb;
-  --accent-wash: #f1f4fe;
+  // Acento índigo (acciones, selección, foco)
+  --accent: #5b4bdb;
+  --accent-hover: #4a3bc6;
+  --accent-soft: #e4e1fb;
+  --accent-wash: #f2f0fe;
   --on-accent: #ffffff;
 
-  // Estados de pedido
-  --st-pendiente: #7a818c;
-  --st-ruta: #c2720a;
-  --st-ruta-text: #a35a06;
-  --st-entregado: #1f7a4d;
-  --st-cancelado: #8a909a;
-  --danger: #b42318;
-  --danger-wash: #fdecea;
+  // Coral: alertas, deudas, contadores
+  --coral: #ff6b5b;
+  --on-coral: #15142b;
+
+  // Imanes de estado de pedido (relleno) y su versión para texto
+  --st-pendiente: #6b6890;
+  --st-pendiente-wash: #efeef6;
+  --st-ruta: #e8920c;
+  --st-ruta-text: #a15800;
+  --st-ruta-wash: #fdf2e0;
+  --st-entregado: #18a06b;
+  --st-entregado-text: #12825a;
+  --st-entregado-wash: #e3f5ec;
+  --st-cancelado: #a3a1b8;
+  --st-cancelado-wash: #f1f1f5;
+  --danger: #d63d2e;
+  --danger-wash: #ffecea;
 
   // Forma y profundidad
-  --radius-sm: 6px;
-  --radius: 8px;
-  --radius-lg: 10px;
-  --shadow-pop: 0 8px 24px rgba(22, 24, 29, 0.14), 0 2px 6px rgba(22, 24, 29, 0.08);
-  --dur: 160ms;
-  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 1px 2px rgba(21, 20, 43, 0.05);
+  --shadow-pop: 0 12px 32px rgba(21, 20, 43, 0.14), 0 2px 6px rgba(21, 20, 43, 0.06);
+  --dur: 180ms;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   // Barra inferior en celular (los layouts la usan para dejar espacio)
-  --tabbar-h: 58px;
+  --tabbar-h: 64px;
 }
 
 body.dark {
-  --bg: #0f1013;
-  --surface: #16181d;
-  --surface-2: #1c1e24;
-  --sidebar: #121317;
-  --hover: #23262d;
-  --selected: #2a2d35;
+  --bg: #0e0d1a;
+  --surface: #16152b;
+  --surface-2: #1c1b34;
+  --sidebar: #0e0d1a;
+  --hover: #22213d;
+  --selected: #2a2752;
 
-  --text: #edeef0;
-  --text-2: #c9ccd2;
-  --text-soft: #a2a7b0;
-  --text-muted: #8f959f;
+  --text: #eeedf7;
+  --text-2: #cfcde3;
+  --text-soft: #aaa7c6;
+  --text-muted: #9693b6;
 
-  --border: #2a2d35;
-  --border-soft: #22252b;
-  --border-strong: #3a3e47;
+  --border: #26253f;
+  --border-soft: #1f1e36;
+  --border-strong: #37355a;
 
-  --accent: #6e86f0;
-  --accent-hover: #8a9df4;
-  --accent-soft: #26305a;
-  --accent-wash: #1b2140;
-  --on-accent: #0f1013;
+  --accent: #8b80f9;
+  --accent-hover: #a39af9;
+  --accent-soft: #2e2a63;
+  --accent-wash: #1d1b3f;
+  --on-accent: #0e0d1a;
 
-  --st-pendiente: #8f959f;
-  --st-ruta: #e09a3a;
-  --st-ruta-text: #e8a64d;
-  --st-entregado: #3faf76;
-  --st-cancelado: #6b7079;
-  --danger: #f0645a;
-  --danger-wash: #3a1d1b;
+  --coral: #ff7b6c;
+  --on-coral: #15142b;
 
-  --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --st-pendiente: #a19dc0;
+  --st-pendiente-wash: #222140;
+  --st-ruta: #f2a93b;
+  --st-ruta-text: #f5b75a;
+  --st-ruta-wash: #3a2a12;
+  --st-entregado: #34c88a;
+  --st-entregado-text: #4fd49b;
+  --st-entregado-wash: #11302a;
+  --st-cancelado: #6c6a88;
+  --st-cancelado-wash: #1e1d33;
+  --danger: #ff7b6c;
+  --danger-wash: #3a1c22;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 // Ionic toma la misma paleta
@@ -97,6 +131,8 @@ body.dark {
   --ion-text-color: var(--text);
   --ion-color-primary: var(--accent);
   --ion-color-primary-contrast: var(--on-accent);
+  --ion-color-primary-shade: var(--accent-hover);
+  --ion-color-primary-tint: var(--accent-hover);
 }
 
 // ---------------------------------------------------------------------------
@@ -110,7 +146,7 @@ body.dark {
   --k-paper: var(--surface);
   --k-paper-alt: var(--surface-2);
   --k-amber: var(--accent);
-  --k-teal: var(--st-entregado);
+  --k-teal: var(--st-entregado-text);
   --k-coral: var(--danger);
 
   --k-bg: var(--bg);
@@ -128,6 +164,7 @@ body.dark {
 
 body {
   font-family: var(--ui-font);
+  font-size: var(--fs-base);
   background: var(--bg);
   color: var(--text);
 }

@@ -12,7 +12,7 @@
 }
 
 .kpi-link:hover {
-  background: var(--surface-2);
+  background: var(--accent-wash);
 }
 
 .lista {
@@ -163,8 +163,10 @@
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
-  font-size: 14px;
-  font-weight: 500;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -179,7 +181,7 @@
 }
 
 .accion-texto {
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .entregar {
@@ -205,19 +207,20 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .kpis-3 .kpi:nth-child(3) {
-    border-left: 1px solid var(--border);
-  }
-
-  .kpis-3 .kpi:nth-child(n + 3) {
-    border-top: none;
-  }
-
   .kpis-3 .kpi {
-    padding: 12px;
+    padding: 12px 10px 2px;
+  }
+
+  .kpis-3 .kpi:first-child {
+    padding-left: 0;
+  }
+
+  .kpis-3 .kpi-label {
+    min-height: 2.7em;
+    letter-spacing: 0.04em;
   }
 
   .kpis-3 .kpi-valor {
-    font-size: 16px;
+    font-size: 20px;
   }
 }

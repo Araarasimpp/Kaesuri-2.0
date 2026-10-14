@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T03:02:05.122199Z",
+  "title": "Design System: Home ALS",
+  "extensions": {
+    "colorMeta": {
+      "indigo-accion": {
+        "role": "primary",
+        "displayName": "Índigo de acción",
+        "canonical": "#5b4bdb",
+        "tonalRamp": [
+          "#1d1650",
+          "#2e2484",
+          "#4a3bc6",
+          "#5b4bdb",
+          "#8b80f9",
+          "#b9b2fb",
+          "#e4e1fb",
+          "#f2f0fe"
+        ]
+      },
+      "coral-alerta": {
+        "role": "secondary",
+        "displayName": "Coral de alerta",
+        "canonical": "#ff6b5b",
+        "tonalRamp": [
+          "#5c1a14",
+          "#8f2a20",
+          "#d63d2e",
+          "#ff6b5b",
+          "#ff8f82",
+          "#ffb4ab",
+          "#ffd7d2",
+          "#ffecea"
+        ]
+      },
+      "iman-ruta": {
+        "role": "tertiary",
+        "displayName": "Imán en ruta",
+        "canonical": "#e8920c",
+        "tonalRamp": [
+          "#3a2a12",
+          "#6b4205",
+          "#a15800",
+          "#e8920c",
+          "#f2a93b",
+          "#f6c57a",
+          "#fae0b8",
+          "#fdf2e0"
+        ]
+      },
+      "iman-entregado": {
+        "role": "tertiary",
+        "displayName": "Imán entregado",
+        "canonical": "#18a06b",
+        "tonalRamp": [
+          "#11302a",
+          "#0b5a3c",
+          "#12825a",
+          "#18a06b",
+          "#34c88a",
+          "#7fdcb3",
+          "#bdeed7",
+          "#e3f5ec"
+        ]
+      },
+      "tinta-indigo": {
+        "role": "neutral",
+        "displayName": "Tinta índigo",
+        "canonical": "#15142b",
+        "tonalRamp": [
+          "#0e0d1a",
+          "#15142b",
+          "#34324f",
+          "#5e5a7e",
+          "#6b6890",
+          "#a3a1b8",
+          "#e5e4f0",
+          "#f8f8fc"
+        ]
+      }
+    },
+    "shadows": [
+      {
+        "name": "pop",
+        "value": "0 12px 32px rgba(21,20,43,.14), 0 2px 6px rgba(21,20,43,.06)",
+        "purpose": "Avisos, hoja Más, menús emergentes."
+      },
+      {
+        "name": "boton-central",
+        "value": "0 0 0 4px var(--surface), 0 6px 14px rgba(91,75,219,.32)",
+        "purpose": "Disco Nuevo de la barra inferior."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Toda transición; desaceleración exponencial."
+      },
+      {
+        "name": "dur",
+        "value": "180ms",
+        "purpose": "Hover, color y fondo."
+      },
+      {
+        "name": "iman-pega",
+        "value": "420ms scale(.55→1)",
+        "purpose": "Imán que cambia de estado."
+      },
+      {
+        "name": "ficha-viaja",
+        "value": "View Transitions",
+        "purpose": "Ficha que cambia de carril en el dashboard."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "640px"
+      },
+      {
+        "name": "tabbar",
+        "value": "860px"
+      },
+      {
+        "name": "carriles",
+        "value": "900px"
+      }
+    ],
+    "components": [
+      {
+        "name": "button-primary",
+        "html": "<button class=\"btn btn-primary\">Nuevo pedido</button>",
+        "css": ".btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:10px;font:600 14px 'Plus Jakarta Sans',sans-serif;border:1px solid #d3d1e3;background:#fff;color:#15142b}.btn-primary{background:#5b4bdb;border-color:#5b4bdb;color:#fff}"
+      },
+      {
+        "name": "iman-chip",
+        "html": "<span class=\"iman iman-en_ruta\">En ruta</span>",
+        "css": ".iman{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px 0 8px;border-radius:999px;font:600 12px 'Plus Jakarta Sans',sans-serif}.iman::before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor}.iman-en_ruta{background:#fdf2e0;color:#a15800}"
+      },
+      {
+        "name": "ficha",
+        "html": "<div class=\"ficha\"><b>#1043</b><span>Ana Rojas</span><span>$52.000</span></div>",
+        "css": ".ficha{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1px rgba(107,104,144,.22);font:600 13px 'Plus Jakarta Sans',sans-serif;color:#15142b}.ficha b{font-size:17px;font-weight:800;letter-spacing:-.02em}"
+      }
+    ],
+    "narrative": {
+      "northStar": "El tablero de despacho",
+      "rules": [
+        {
+          "section": "Colors",
+          "text": "The Imán Rule. El color de estado solo se usa para el estado de un pedido."
+        },
+        {
+          "section": "Colors",
+          "text": "The Una Voz Rule. El índigo marca la acción."
+        },
+        {
+          "section": "Typography",
+          "text": "The Cifra Tabular Rule. Todo número lleva .num."
+        },
+        {
+          "section": "Elevation & Depth",
+          "text": "The Plano Rule. Si no flota sobre otra cosa, no lleva sombra."
+        }
+      ]
+    }
+  }
+}

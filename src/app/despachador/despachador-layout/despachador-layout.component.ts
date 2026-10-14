@@ -50,7 +50,7 @@ const MINUTOS_INACTIVIDAD = 30;
     AvisoInactividadComponent,
   ],
   templateUrl: './despachador-layout.component.html',
-  styleUrls: ['../../shared/pill-nav.scss', './despachador-layout.component.scss'],
+  styleUrls: ['../../shared/shell.scss', '../../shared/pill-nav.scss', './despachador-layout.component.scss'],
 })
 export class DespachadorLayoutComponent implements OnInit, OnDestroy {
   collapsed = localStorage.getItem('sidebar-colapsado') === '1';

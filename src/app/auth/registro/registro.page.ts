@@ -5,11 +5,12 @@ import { Router, RouterLink } from '@angular/router';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { EvaluacionClave, evaluarClave, vecesFiltrada } from '../../shared/seguridad/clave';
 import { MedidorClaveComponent } from '../../shared/seguridad/medidor-clave.component';
+import { AuthMarcaComponent } from '../marca/auth-marca.component';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MedidorClaveComponent],
+  imports: [CommonModule, FormsModule, RouterLink, AuthMarcaComponent, MedidorClaveComponent],
   templateUrl: './registro.page.html',
   styleUrls: ['../auth-shell.scss', './registro.page.scss'],
 })

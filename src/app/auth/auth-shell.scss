@@ -4,44 +4,70 @@
 .auth-shell {
   min-height: 100vh;
   min-height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: calc(48px + env(safe-area-inset-top)) 20px calc(48px + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   box-sizing: border-box;
   background: var(--bg);
   color: var(--text);
 }
 
+// Panel índigo con el tablero de imanes (auth-marca.component.ts)
+.auth-marca {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
+}
+
 .auth-card {
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
+  align-self: center;
+  justify-self: center;
   display: flex;
   flex-direction: column;
   gap: 28px;
+  padding: 56px 24px calc(56px + env(safe-area-inset-bottom));
+  box-sizing: content-box;
+}
+
+@media (max-width: 860px) {
+  .auth-shell {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .auth-marca {
+    position: static;
+    height: auto;
+  }
+
+  .auth-card {
+    align-self: stretch;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 32px 20px calc(40px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
+  }
 }
 
 .auth-head {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 18px;
 }
 
 .brand-mark {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #ffffff; // el logo es un sello blanco, también en modo oscuro
-  box-shadow: 0 0 0 1px var(--border);
+  display: none; // el logo va en el panel de marca
 }
 
 .auth-head h1 {
   margin: 0;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
 }
 
 .auth-head p {
@@ -70,8 +96,8 @@
 }
 
 .field label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--fs-sm);
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -83,11 +109,11 @@
 
 .field input {
   width: 100%;
-  height: 42px;
-  padding: 0 12px;
+  height: 48px;
+  padding: 0 14px;
   box-sizing: border-box;
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
   font-size: 15px;
@@ -118,15 +144,17 @@
 
 .reveal-btn {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  height: 32px;
+  top: 7px;
+  right: 7px;
+  height: 34px;
   padding: 0 10px;
   border: none;
   border-radius: 4px;
   background: none;
   color: var(--text-soft);
-  font-size: 13px;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -155,14 +183,15 @@
 }
 
 .submit-btn {
-  height: 44px;
-  margin-top: 4px;
+  height: 52px;
+  margin-top: 6px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   background: var(--accent);
   color: var(--on-accent);
-  font-size: 15px;
-  font-weight: 500;
+  font-family: inherit;
+  font-size: var(--fs-md);
+  font-weight: 700;
   cursor: pointer;
   transition: background var(--dur) var(--ease);
 }
