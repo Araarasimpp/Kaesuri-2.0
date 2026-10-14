@@ -1,0 +1,87 @@
+// src/app/admin/admin.routes.ts
+import { Routes } from '@angular/router';
+import { RoleGuard } from '../core/guards/role.guard';
+import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
+
+export const ADMIN_ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [RoleGuard],
+    data: { roles: ['admin'] },
+    component: AdminLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./dashboard/dashboard.page').then((m) => m.DashboardPage),
+      },
+      {
+        path: 'productos',
+        loadComponent: () => import('./productos/productos.page').then((m) => m.ProductosPage),
+      },
+      {
+        path: 'usuarios',
+        loadComponent: () => import('./usuarios/usuarios.page').then((m) => m.UsuariosPage),
+      },
+      {
+        path: 'pedidos',
+        loadComponent: () => import('./pedidos/pedidos.page').then((m) => m.PedidosPage),
+      },
+      {
+        path: 'pedidos/nuevo',
+        data: { volverA: '/admin/pedidos' },
+        loadComponent: () =>
+          import('../vendedor/nuevo-pedido/nuevo-pedido.page').then((m) => m.NuevoPedidoPage),
+      },
+      {
+        path: 'pedidos/:id/editar',
+        data: { volverA: '/admin/pedidos' },
+        loadComponent: () =>
+          import('../vendedor/nuevo-pedido/nuevo-pedido.page').then((m) => m.NuevoPedidoPage),
+      },
+      {
+        path: 'venta-local',
+        data: { canal: 'local', volverA: '/admin/pedidos', rutaVentas: '/admin/ventas-del-local' },
+        loadComponent: () =>
+          import('../vendedor/nuevo-pedido/nuevo-pedido.page').then((m) => m.NuevoPedidoPage),
+      },
+      {
+        path: 'ventas-del-local',
+        data: { rutaNueva: '/admin/venta-local', rutaEditar: '/admin/ventas-del-local' },
+        loadComponent: () =>
+          import('./ventas-local/ventas-local.page').then((m) => m.VentasLocalPage),
+      },
+      {
+        // Corregir una venta del local (producto, cantidad, precio o pago)
+        path: 'ventas-del-local/:id/editar',
+        data: { volverA: '/admin/ventas-del-local' },
+        loadComponent: () =>
+          import('../vendedor/nuevo-pedido/nuevo-pedido.page').then((m) => m.NuevoPedidoPage),
+      },
+      {
+        path: 'cuadres',
+        loadComponent: () => import('./cuadres/cuadres.page').then((m) => m.AdminCuadresPage),
+      },
+      {
+        path: 'clientes',
+        loadComponent: () => import('./clientes/clientes.page').then((m) => m.ClientesPage),
+      },
+      {
+        path: 'reportes',
+        loadComponent: () => import('./reportes/reportes.page').then((m) => m.ReportesPage),
+      },
+      {
+        path: 'actividad',
+        loadComponent: () => import('./actividad/actividad.page').then((m) => m.ActividadPage),
+      },
+      {
+        path: 'configuracion',
+        loadComponent: () =>
+          import('./configuracion/configuracion.page').then((m) => m.ConfiguracionPage),
+      },
+      {
+        path: 'seguridad',
+        loadComponent: () => import('./seguridad/seguridad.page').then((m) => m.SeguridadPage),
+      },
+    ],
+  },
+];

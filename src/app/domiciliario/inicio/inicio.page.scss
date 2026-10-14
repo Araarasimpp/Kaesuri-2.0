@@ -1,0 +1,223 @@
+:host {
+  display: block;
+}
+
+.kpis-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.kpi-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.kpi-link:hover {
+  background: var(--surface-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// ---------- Tarjeta de entrega ----------
+.entrega {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.entrega:first-child {
+  border-color: color-mix(in srgb, var(--st-ruta) 45%, var(--border));
+}
+
+.entrega-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.entrega:first-child .entrega-top span:nth-child(2) {
+  color: var(--st-ruta-text);
+  font-weight: 600;
+}
+
+.entrega-num {
+  margin-left: auto;
+}
+
+.direccion {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.direccion-texto {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.direccion-sub {
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.observacion {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--st-ruta) 10%, var(--surface));
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.observacion ion-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 17px;
+  color: var(--st-ruta-text);
+}
+
+.cobro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.productos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-2);
+  min-width: 0;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.cobro-valor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.cobro-valor span {
+  font-size: 11px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cobro-valor strong {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.cobro-valor small {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.accion {
+  height: 46px;
+  min-width: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.accion ion-icon {
+  font-size: 19px;
+}
+
+.accion:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.accion-texto {
+  flex: 1;
+}
+
+.entregar {
+  flex: 1;
+  height: 46px;
+  font-size: 15px;
+}
+
+@media (max-width: 380px) {
+  .accion-texto {
+    font-size: 0; // solo ícono en pantallas muy angostas
+    flex: 0 0 46px;
+    padding: 0;
+  }
+
+  .accion-texto ion-icon {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 640px) {
+  .kpis-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .kpis-3 .kpi:nth-child(3) {
+    border-left: 1px solid var(--border);
+  }
+
+  .kpis-3 .kpi:nth-child(n + 3) {
+    border-top: none;
+  }
+
+  .kpis-3 .kpi {
+    padding: 12px;
+  }
+
+  .kpis-3 .kpi-valor {
+    font-size: 16px;
+  }
+}

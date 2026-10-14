@@ -1,0 +1,95 @@
+<div class="page">
+  <header class="head">
+    <h1>Mi ruta</h1>
+  </header>
+
+  <ng-container *ngIf="!loading; else cargando">
+    <section class="kpis kpis-3" aria-label="Resumen de hoy">
+      <div class="kpi">
+        <span class="kpi-label">Por entregar</span>
+        <span class="kpi-valor num">{{ pedidos.length }}</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Entregados hoy</span>
+        <span class="kpi-valor num">{{ entregadosHoy }}</span>
+      </div>
+      <a class="kpi kpi-link" routerLink="/domiciliario/cuadres">
+        <span class="kpi-label">Efectivo en mano</span>
+        <span class="kpi-valor num">{{ formatoMoneda(efectivoEnMano) }}</span>
+      </a>
+    </section>
+
+    <div class="lista" *ngIf="pedidos.length; else vacio">
+      <article class="entrega" *ngFor="let p of pedidos; let i = index" [attr.aria-label]="'Pedido ' + p.numero">
+        <div class="entrega-top">
+          <app-estado-icon [estado]="'en_ruta'" [size]="13"></app-estado-icon>
+          <span>{{ i === 0 ? 'Siguiente entrega' : 'En ruta' }}</span>
+          <span class="num entrega-num">#{{ p.numero }}</span>
+        </div>
+
+        <button class="direccion" (click)="navegar(p)" [attr.aria-label]="'Abrir en el mapa: ' + p.direccion">
+          <span class="direccion-texto">{{ p.direccion }}</span>
+          <span class="direccion-sub">{{ p.barrio ? p.barrio + ', ' : '' }}{{ p.cliente_nombre }}</span>
+        </button>
+
+        <p class="observacion" *ngIf="p.observaciones">
+          <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+          <span>{{ p.observaciones }}</span>
+        </p>
+
+        <div class="cobro">
+          <ul class="productos">
+            <li *ngFor="let linea of p.productos">{{ linea }}</li>
+            <li *ngIf="!p.productos.length" class="muted">Sin productos</li>
+          </ul>
+          <div class="cobro-valor">
+            <span>Cobrar</span>
+            <strong class="num">{{ formatoMoneda(p.total) }}</strong>
+            <small class="num">Tu domicilio {{ formatoMoneda(p.pago_domiciliario ?? p.valor_domicilio) }}</small>
+          </div>
+        </div>
+
+        <div class="acciones">
+          <button class="accion" (click)="llamar(p)" [disabled]="!p.cliente_telefono" [attr.aria-label]="'Llamar a ' + p.cliente_nombre">
+            <ion-icon name="call-outline"></ion-icon>
+          </button>
+          <button class="accion" (click)="whatsapp(p)" [disabled]="!p.cliente_telefono" [attr.aria-label]="'WhatsApp a ' + p.cliente_nombre">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+          </button>
+          <button class="accion accion-texto" (click)="navegar(p)">
+            <ion-icon name="navigate-outline" aria-hidden="true"></ion-icon>
+            Cómo llegar
+          </button>
+          <button class="btn btn-primary entregar" (click)="abrirEntrega(p)">Entregar</button>
+        </div>
+      </article>
+    </div>
+
+    <ng-template #vacio>
+      <div class="vacio">
+        <p class="vacio-titulo">No tienes entregas pendientes</p>
+        <p *ngIf="porCuadrar; else sinCuadre">
+          Llevas {{ porCuadrar }} {{ porCuadrar === 1 ? 'pedido entregado' : 'pedidos entregados' }} hoy sin cuadrar.
+        </p>
+        <ng-template #sinCuadre>
+          <p>Cuando te asignen un pedido aparece aquí al instante.</p>
+        </ng-template>
+        <a class="btn" routerLink="/domiciliario/cuadres" *ngIf="porCuadrar">Ir al cuadre</a>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #cargando>
+    <div class="kpis kpis-3" aria-busy="true" aria-label="Cargando">
+      <div class="kpi" *ngFor="let i of [1, 2, 3]"><span class="sk sk-a"></span><span class="sk sk-b"></span></div>
+    </div>
+    <app-esqueleto tipo="lista" [cantidad]="4" etiqueta="Cargando pedidos"></app-esqueleto>
+  </ng-template>
+</div>
+
+<app-entregar-pedido
+  *ngIf="pedidoEntregando"
+  [pedido]="pedidoEntregando"
+  (cerrar)="cerrarEntrega()"
+  (entregado)="onEntregado()"
+></app-entregar-pedido>

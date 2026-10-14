@@ -1,0 +1,74 @@
+/*
+ * App Global CSS
+ * Estilos que aplican a toda la app. El tema vive en ./theme/kaesuri-theme.scss.
+ */
+@use './theme/kaesuri-theme.scss' as *;
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/*
+ * Modo oscuro: lo maneja ThemeService con la clase body.dark.
+ * Se quitó @ionic/angular/css/palettes/dark.system.css porque seguía la
+ * configuración del teléfono y se peleaba con el botón de tema de la app.
+ */
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* Cifras alineadas en columnas: plata, cantidades, números de pedido */
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scrollbars discretos en escritorio */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

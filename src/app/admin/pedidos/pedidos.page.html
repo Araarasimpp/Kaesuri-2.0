@@ -1,0 +1,253 @@
+<div class="pedidos-page">
+  <header class="page-header">
+    <div class="title">
+      <h1>Pedidos</h1>
+      <span class="subtitle">{{ hoy }}</span>
+    </div>
+    <label class="search">
+      <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
+      <input
+        type="search"
+        [(ngModel)]="busqueda"
+        placeholder="Cliente, barrio o número"
+        aria-label="Buscar pedidos"
+      />
+    </label>
+    <a class="btn btn-primary" [routerLink]="rutaNuevo">
+      <ion-icon name="add" aria-hidden="true"></ion-icon>
+      <span>Nuevo pedido</span>
+    </a>
+  </header>
+
+  <div class="toolbar">
+    <nav class="tabs" aria-label="Filtrar por estado">
+      <button
+        class="tab"
+        *ngFor="let e of estados"
+        [class.active]="filtroEstado === e.valor"
+        [attr.aria-pressed]="filtroEstado === e.valor"
+        (click)="filtroEstado = e.valor"
+      >
+        {{ e.etiqueta }}
+        <span class="num count">{{ conteo(e.valor) }}</span>
+      </button>
+    </nav>
+    <select class="select-ghost" [(ngModel)]="filtroCanal" (change)="onCambioCanal()" aria-label="Filtrar por canal de venta">
+      <option value="domicilio">Domicilios</option>
+      <option value="local">Ventas en local</option>
+      <option value="todos">Domicilios y local</option>
+    </select>
+    <select class="select-ghost" *ngIf="filtroCanal !== 'local'" [(ngModel)]="filtroRotulo" aria-label="Filtrar por rótulo">
+      <option value="todos">Rótulo: todos</option>
+      <option value="pendiente">Rótulo: pendiente</option>
+      <option value="impreso">Rótulo: impreso</option>
+    </select>
+  </div>
+
+  <ng-container *ngIf="!loading; else cargando">
+    <div class="list" *ngIf="filtrados.length; else vacio">
+      <div class="list-head row-grid">
+        <input
+          type="checkbox"
+          class="check"
+          [checked]="todosSeleccionados"
+          (change)="toggleSeleccionarTodos()"
+          aria-label="Seleccionar todos"
+        />
+        <span class="c-num">#</span>
+        <span class="c-st"></span>
+        <span class="c-main">Cliente y productos</span>
+        <span class="c-barrio">Barrio</span>
+        <span class="c-dom">Domiciliario</span>
+        <span class="c-rot">Rótulo</span>
+        <span class="c-total">Total</span>
+        <span class="c-fecha">Fecha</span>
+        <span class="c-menu"></span>
+      </div>
+
+      <section class="group" *ngFor="let g of grupos" [attr.aria-label]="g.etiqueta">
+        <div class="group-head">
+          <input
+            type="checkbox"
+            class="check"
+            [checked]="grupoSeleccionado(g)"
+            (change)="toggleGrupo(g)"
+            [attr.aria-label]="'Seleccionar ' + g.etiqueta"
+          />
+          <app-estado-icon [estado]="g.estado"></app-estado-icon>
+          <span class="group-name">{{ g.etiqueta }}</span>
+          <span class="num group-count">{{ g.pedidos.length }}</span>
+          <span class="num group-sum">{{ formatoMoneda(g.subtotal) }}</span>
+        </div>
+
+        <div
+          class="row row-grid"
+          *ngFor="let p of g.pedidos; trackBy: trackPedido"
+          [class.selected]="seleccionados.has(p.id)"
+          [class.closed]="!editable(p)"
+        >
+          <input
+            type="checkbox"
+            class="check"
+            [checked]="seleccionados.has(p.id)"
+            (change)="toggleSeleccion(p.id)"
+            [attr.aria-label]="'Seleccionar pedido ' + p.numero"
+          />
+          <span class="c-num num">#{{ p.numero }}</span>
+          <span class="c-st"><app-estado-icon [estado]="p.estado"></app-estado-icon></span>
+
+          <div class="c-main">
+            <div class="cliente-linea">
+              <span class="cliente">{{ p.cliente_nombre }}</span>
+              <span class="meta-mobile num">#{{ p.numero }}<ng-container *ngIf="p.barrio">, {{ p.barrio }}</ng-container></span>
+            </div>
+          </div>
+
+          <div class="c-prods">
+            <ul class="prods" *ngIf="p.items?.length; else sinProductos" [attr.aria-label]="'Productos: ' + p.productos">
+              <li class="prod" *ngFor="let it of p.items | slice: 0 : maxProductosVisibles">
+                <button
+                  type="button"
+                  class="prod-foto"
+                  [disabled]="!it.imagen_url"
+                  (click)="verImagen(it.imagen_url, $event)"
+                  [attr.aria-label]="it.imagen_url ? 'Ver foto de ' + it.nombre : it.nombre + ', sin foto'"
+                >
+                  <img *ngIf="it.imagen_url; else sinFoto" [src]="it.imagen_url" alt="" loading="lazy" decoding="async" />
+                  <ng-template #sinFoto><span class="prod-inicial" aria-hidden="true">{{ inicial(it.nombre) }}</span></ng-template>
+                  <span class="prod-cant num" *ngIf="it.cantidad > 1" aria-hidden="true">×{{ it.cantidad }}</span>
+                </button>
+                <span class="prod-nombre">{{ it.nombre }}</span>
+              </li>
+              <li class="prod-mas num" *ngIf="p.items.length > maxProductosVisibles" [title]="p.productos">
+                +{{ p.items.length - maxProductosVisibles }} más
+              </li>
+            </ul>
+            <ng-template #sinProductos><span class="productos">Sin productos</span></ng-template>
+          </div>
+
+          <span class="c-barrio">
+            <span class="chip-local" *ngIf="p.canal === 'local'; else barrioTexto">En local</span>
+            <ng-template #barrioTexto>{{ p.barrio || '—' }}</ng-template>
+          </span>
+
+          <div class="c-dom">
+            <ng-container *ngIf="editable(p) && p.canal !== 'local'; else domiciliarioFijo">
+              <app-avatar
+                [nombre]="p.domiciliario_id ? nombreDomiciliario(p.domiciliario_id) : null"
+                [url]="fotoDomiciliario(p.domiciliario_id)"
+              ></app-avatar>
+              <select
+                class="dom-select"
+                [class.unassigned]="!p.domiciliario_id"
+                (change)="onCambioDomiciliario(p, $event)"
+                [disabled]="guardandoId === p.id"
+                [attr.aria-label]="'Domiciliario del pedido ' + p.numero"
+              >
+                <option value="" [selected]="!p.domiciliario_id">
+                  {{ p.domiciliario_id ? 'Quitar domiciliario' : 'Asignar' }}
+                </option>
+                <option *ngFor="let d of domiciliarios" [value]="d.id" [selected]="d.id === p.domiciliario_id">
+                  {{ d.nombre }}
+                </option>
+              </select>
+            </ng-container>
+            <ng-template #domiciliarioFijo>
+              <ng-container *ngIf="p.domiciliario_id; else sinDom">
+                <app-avatar
+                  [nombre]="nombreDomiciliario(p.domiciliario_id)"
+                  [url]="fotoDomiciliario(p.domiciliario_id)"
+                ></app-avatar>
+                <span class="dom-name">{{ nombreDomiciliario(p.domiciliario_id) }}</span>
+              </ng-container>
+              <ng-template #sinDom><span class="muted">—</span></ng-template>
+            </ng-template>
+          </div>
+
+          <span class="c-rot" [class.pending]="!p.rotulo_impreso_at" *ngIf="p.canal !== 'local'; else sinRotulo">
+            <ion-icon name="print-outline" aria-hidden="true"></ion-icon>
+            {{ p.rotulo_impreso_at ? 'Impreso' : 'Pendiente' }}
+          </span>
+          <ng-template #sinRotulo><span class="c-rot muted">—</span></ng-template>
+
+          <span class="c-total num">{{ formatoMoneda(p.total) }}</span>
+          <span class="c-fecha num" [title]="formatoFechaCompleta(p.created_at) + ', vendió ' + nombreVendedor(p.vendedor_id)">
+            {{ formatoFecha(p.created_at) }}
+          </span>
+
+          <div class="c-menu">
+            <button
+              class="icon-btn"
+              (click)="toggleMenu(p.id)"
+              [attr.aria-expanded]="menuAbiertoId === p.id"
+              [attr.aria-label]="'Más acciones del pedido ' + p.numero"
+            >
+              <ion-icon name="ellipsis-horizontal"></ion-icon>
+            </button>
+            <ng-container *ngIf="menuAbiertoId === p.id">
+              <button class="popover-backdrop" aria-label="Cerrar" (click)="menuAbiertoId = null"></button>
+              <div class="popover" role="menu">
+                <p class="popover-meta">Vendió {{ nombreVendedor(p.vendedor_id) }}</p>
+                <a role="menuitem" *ngIf="p.estado !== 'cancelado'" [routerLink]="rutaEditar(p)" (click)="menuAbiertoId = null">
+                  Editar pedido
+                </a>
+                <button role="menuitem" *ngIf="editable(p)" (click)="cancelarPedido(p)">
+                  Cancelar pedido
+                </button>
+                <button role="menuitem" class="danger" *ngIf="p.estado !== 'entregado'" (click)="eliminarPedido(p)">Eliminar pedido</button>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+
+  <div class="selection-bar" *ngIf="seleccionados.size" role="toolbar" aria-label="Acciones de selección">
+    <span class="num sel-count">
+      {{ seleccionados.size }} {{ seleccionados.size === 1 ? 'seleccionado' : 'seleccionados' }}
+    </span>
+    <select
+      class="bar-select"
+      (change)="onAsignarLote($event)"
+      [disabled]="asignandoLote || !domiciliarios.length"
+      aria-label="Asignar domiciliario a la selección"
+    >
+      <option value="" selected disabled>{{ asignandoLote ? 'Asignando…' : 'Asignar domiciliario' }}</option>
+      <option *ngFor="let d of domiciliarios" [value]="d.id">{{ d.nombre }}</option>
+    </select>
+    <button class="bar-btn" (click)="imprimirRotulos()" [disabled]="imprimiendo">
+      <ion-icon name="print-outline" aria-hidden="true"></ion-icon>
+      {{ imprimiendo ? 'Preparando…' : 'Imprimir rótulos' }}
+    </button>
+    <button class="bar-icon" (click)="limpiarSeleccion()" aria-label="Quitar selección">
+      <ion-icon name="close"></ion-icon>
+    </button>
+  </div>
+
+  <ng-template #vacio>
+    <div class="empty">
+      <ng-container *ngIf="pedidos.length; else sinNada">
+        <p class="empty-title">Ningún pedido coincide</p>
+        <p class="empty-text">Prueba con otro nombre, barrio o número, o cambia el filtro de estado.</p>
+        <button class="btn" (click)="busqueda = ''; filtroEstado = 'todos'; filtroRotulo = 'todos'">
+          Quitar filtros
+        </button>
+      </ng-container>
+      <ng-template #sinNada>
+        <p class="empty-title">Todavía no hay pedidos</p>
+        <p class="empty-text">Los pedidos que creen los vendedores aparecen aquí al instante.</p>
+        <a class="btn btn-primary" [routerLink]="rutaNuevo">Crear el primero</a>
+      </ng-template>
+    </div>
+  </ng-template>
+
+  <ng-template #cargando>
+    <div class="list skeleton" aria-busy="true" aria-label="Cargando pedidos">
+      <div class="sk-row" *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+        <span class="sk sk-a"></span><span class="sk sk-b"></span><span class="sk sk-c"></span>
+      </div>
+    </div>
+  </ng-template>
+  <app-imagen-preview [url]="imagenAmpliada" *ngIf="imagenAmpliada" (cerrar)="imagenAmpliada = null"></app-imagen-preview>
+</div>

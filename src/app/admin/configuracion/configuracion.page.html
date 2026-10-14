@@ -1,0 +1,301 @@
+<div class="config-page">
+  <header class="page-header">
+    <h1>Configuración</h1>
+  </header>
+
+  <ng-container *ngIf="!loading; else cargando">
+    <div class="layout">
+      <div class="col-form">
+        <!-- Rótulo -->
+        <section class="section sec-rotulo" aria-labelledby="sec-rotulo">
+          <div class="section-head">
+            <h2 id="sec-rotulo">Rótulo de entrega</h2>
+            <p>Estos datos salen impresos debajo del logo en cada rótulo.</p>
+          </div>
+
+          <div class="card">
+            <div class="field">
+              <label for="nombre">Nombre del negocio</label>
+              <input
+                id="nombre"
+                type="text"
+                [(ngModel)]="form.nombre_negocio"
+                (ngModelChange)="onCambio()"
+              />
+            </div>
+
+            <div class="field">
+              <label for="telefonos">Teléfonos</label>
+              <input
+                id="telefonos"
+                type="text"
+                inputmode="tel"
+                [(ngModel)]="form.telefonos"
+                (ngModelChange)="onCambio()"
+                placeholder="318 815 6960 - 310 742 5663"
+              />
+              <p class="hint">Separa los números con un guion. Cada uno sale en su propia línea.</p>
+            </div>
+
+            <div class="field">
+              <label for="redes">Redes sociales</label>
+              <input
+                id="redes"
+                type="text"
+                [(ngModel)]="form.redes"
+                (ngModelChange)="onCambio()"
+                placeholder="@homeals"
+              />
+            </div>
+
+            <div class="field">
+              <label for="garantia">Texto de garantía</label>
+              <textarea
+                id="garantia"
+                rows="3"
+                [(ngModel)]="form.texto_garantia"
+                (ngModelChange)="onCambio()"
+              ></textarea>
+              <p class="hint">Va al pie del rótulo. Déjalo vacío para no imprimirlo.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Inventario -->
+        <section class="section" aria-labelledby="sec-inv">
+          <div class="section-head">
+            <h2 id="sec-inv">Inventario</h2>
+          </div>
+          <div class="card">
+            <div class="field field-inline">
+              <div>
+                <label for="umbral">Umbral de stock bajo</label>
+                <p class="hint">Un producto se marca con stock bajo cuando le quedan menos unidades que este número.</p>
+              </div>
+              <input
+                id="umbral"
+                class="num input-corto"
+                type="number"
+                min="0"
+                inputmode="numeric"
+                [(ngModel)]="form.stock_bajo_umbral"
+                (ngModelChange)="onCambio()"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Barra de guardado: aparece solo con cambios pendientes -->
+        <div class="save-bar" *ngIf="hayCambios || errorMsg || guardadoOk" role="status">
+          <ng-container *ngIf="errorMsg; else estadoGuardado">
+            <span class="save-error">{{ errorMsg }}</span>
+          </ng-container>
+          <ng-template #estadoGuardado>
+            <span class="save-text" *ngIf="hayCambios">Tienes cambios sin guardar</span>
+            <span class="save-ok" *ngIf="!hayCambios && guardadoOk">
+              <ion-icon name="checkmark" aria-hidden="true"></ion-icon>Cambios guardados
+            </span>
+          </ng-template>
+          <div class="save-actions" *ngIf="hayCambios">
+            <button class="btn" (click)="descartar()" [disabled]="guardando">Descartar</button>
+            <button class="btn btn-primary" (click)="guardar()" [disabled]="guardando">
+              {{ guardando ? 'Guardando…' : 'Guardar cambios' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Zonas -->
+        <section class="section" aria-labelledby="sec-zonas">
+          <div class="section-head">
+            <h2 id="sec-zonas">Zonas de domicilio</h2>
+            <p>
+              <strong>Cobro al cliente</strong> es lo que se suma al pedido; <strong>pago al domiciliario</strong> es lo que
+              se le descuenta en su cuadre. Si se le paga más de lo que se cobra, la diferencia la pone la tienda y se
+              resta de la ganancia. Los cambios se guardan al salir de cada campo.
+            </p>
+          </div>
+
+          <div class="card card-flush">
+            <div class="zona-head">
+              <span>Barrio o zona</span>
+              <span class="zona-valor-head">Cobro al cliente</span>
+              <span class="zona-valor-head">Pago al domiciliario</span>
+              <span></span>
+            </div>
+
+            <div class="zona-row" *ngFor="let z of zonas">
+              <input
+                type="text"
+                [(ngModel)]="z.nombre"
+                (change)="actualizarZona(z)"
+                [attr.aria-label]="'Nombre de la zona ' + z.nombre"
+              />
+              <div class="money">
+                <span aria-hidden="true">$</span>
+                <input
+                  type="number"
+                  class="num"
+                  min="0"
+                  inputmode="numeric"
+                  [(ngModel)]="z.valor"
+                  (change)="actualizarZona(z)"
+                  [attr.aria-label]="'Valor del domicilio a ' + z.nombre"
+                />
+              </div>
+              <div class="money">
+                <span aria-hidden="true">$</span>
+                <input
+                  type="number"
+                  class="num"
+                  min="0"
+                  inputmode="numeric"
+                  [(ngModel)]="z.pago_domiciliario"
+                  (change)="actualizarZona(z)"
+                  [attr.aria-label]="'Pago al domiciliario por ' + z.nombre"
+                />
+              </div>
+              <button class="icon-btn danger" (click)="eliminarZona(z)" [attr.aria-label]="'Eliminar ' + z.nombre">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+
+            <p class="zona-empty" *ngIf="!zonas.length">
+              Agrega los barrios donde entregan y su tarifa. Así nadie tiene que escribir el valor a mano.
+            </p>
+
+            <form class="zona-row zona-nueva" (ngSubmit)="agregarZona()">
+              <input
+                type="text"
+                name="nuevaZonaNombre"
+                [(ngModel)]="nuevaZonaNombre"
+                placeholder="Nuevo barrio"
+                aria-label="Nombre del nuevo barrio"
+              />
+              <div class="money">
+                <span aria-hidden="true">$</span>
+                <input
+                  type="number"
+                  class="num"
+                  name="nuevaZonaValor"
+                  min="0"
+                  inputmode="numeric"
+                  [(ngModel)]="nuevaZonaValor"
+                  placeholder="9000"
+                  aria-label="Cobro al cliente"
+                />
+              </div>
+              <div class="money">
+                <span aria-hidden="true">$</span>
+                <input
+                  type="number"
+                  class="num"
+                  name="nuevaZonaPago"
+                  min="0"
+                  inputmode="numeric"
+                  [(ngModel)]="nuevaZonaPago"
+                  placeholder="10000"
+                  aria-label="Pago al domiciliario"
+                />
+              </div>
+              <button
+                type="submit"
+                class="icon-btn add"
+                [disabled]="guardandoZona || !nuevaZonaNombre.trim() || nuevaZonaValor == null"
+                aria-label="Agregar zona"
+              >
+                <ion-icon name="add"></ion-icon>
+              </button>
+            </form>
+          </div>
+          <div class="card field-inline" style="margin-top: 12px">
+            <div>
+              <label for="pago-defecto">Pago al domiciliario en otros barrios</label>
+              <p class="hint">Se usa cuando el barrio del pedido no está en la lista.</p>
+            </div>
+            <div class="money input-corto">
+              <span aria-hidden="true">$</span>
+              <input
+                id="pago-defecto"
+                type="number"
+                class="num"
+                min="0"
+                inputmode="numeric"
+                [(ngModel)]="pagoDomiciliarioDefecto"
+                (change)="guardarPagoDefecto()"
+                [disabled]="guardandoPagoDefecto"
+              />
+            </div>
+          </div>
+          <p class="inline-error" role="alert" *ngIf="errorZona">{{ errorZona }}</p>
+        </section>
+
+        <!-- Seguridad -->
+        <section class="section" aria-labelledby="sec-seguridad">
+          <div class="section-head">
+            <h2 id="sec-seguridad">Seguridad</h2>
+            <p>Protege el acceso de administrador y los computadores compartidos de la tienda.</p>
+          </div>
+          <div class="card">
+            <app-mfa-config></app-mfa-config>
+          </div>
+          <div class="card field-inline" style="margin-top: 12px">
+            <div>
+              <label for="inactividad">Cerrar sesión por inactividad</label>
+              <p class="hint">
+                Aplica al admin y al despachador. Si nadie toca la app durante ese tiempo, se cierra la sesión.
+                Vendedores y domiciliarios no se ven afectados.
+              </p>
+              <p class="hint" *ngIf="!inactividadDisponible">Falta ejecutar <code>supabase/actividad-y-seguridad.sql</code>.</p>
+            </div>
+            <select
+              id="inactividad"
+              class="input-corto select-inact"
+              [ngModel]="inactividadMinutos"
+              (ngModelChange)="guardarInactividad($event)"
+              [disabled]="!inactividadDisponible || guardandoInactividad"
+            >
+              <option *ngFor="let o of opcionesInactividad" [ngValue]="o.valor">{{ o.etiqueta }}</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Respaldo -->
+        <section class="section" aria-labelledby="sec-respaldo">
+          <div class="section-head">
+            <h2 id="sec-respaldo">Respaldo</h2>
+          </div>
+          <div class="card field-inline">
+            <p class="hint hint-body">
+              Descarga un Excel con todos los pedidos, productos y cuadres. Sirve como copia de seguridad fuera de la base de datos.
+            </p>
+            <button class="btn" (click)="exportarDatos()" [disabled]="exportando">
+              <ion-icon name="download-outline" aria-hidden="true"></ion-icon>
+              {{ exportando ? 'Generando…' : 'Descargar Excel' }}
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Vista previa del rótulo -->
+      <aside class="col-preview" aria-labelledby="sec-preview">
+        <div class="preview-head">
+          <div>
+            <h2 id="sec-preview">Vista previa del rótulo</h2>
+            <span class="hint">Pedido de ejemplo, etiqueta de 100 × 100 mm</span>
+          </div>
+          <button class="btn" type="button" (click)="imprimirPrueba()">
+            <ion-icon name="print-outline" aria-hidden="true"></ion-icon>
+            Imprimir prueba
+          </button>
+        </div>
+        <div class="preview-frame">
+          <iframe [srcdoc]="vistaPrevia" title="Vista previa del rótulo" tabindex="-1"></iframe>
+        </div>
+      </aside>
+    </div>
+  </ng-container>
+
+  <ng-template #cargando>
+    <app-esqueleto tipo="formulario" [cantidad]="6" etiqueta="Cargando configuración"></app-esqueleto>
+  </ng-template>
+</div>

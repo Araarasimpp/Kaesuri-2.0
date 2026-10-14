@@ -1,0 +1,141 @@
+<div class="usuarios-page">
+  <header class="page-header">
+    <div>
+      <h1>Usuarios</h1>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <input
+          type="text"
+          [(ngModel)]="busqueda"
+          placeholder="Buscar por nombre o correo"
+          aria-label="Buscar usuarios"
+        />
+      </div>
+    </div>
+  </header>
+
+  <div class="table-card">
+    <ng-container *ngIf="!loading; else cargando">
+      <table *ngIf="filtrados.length; else vacio">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Roles</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of filtrados" [class.fila-inactiva]="!u.activo">
+            <td>
+              <div class="nombre-cell">
+                <label
+                  class="foto-btn"
+                  [class.subiendo]="subiendoFotoId === u.id"
+                  [title]="u.avatar_url ? 'Cambiar foto' : 'Subir foto'"
+                >
+                  <app-avatar [nombre]="u.nombre" [url]="u.avatar_url" [size]="34"></app-avatar>
+                  <span class="foto-overlay" aria-hidden="true">
+                    {{ subiendoFotoId === u.id ? '…' : (u.avatar_url ? 'Cambiar' : 'Foto') }}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    class="sr-only"
+                    [disabled]="subiendoFotoId === u.id"
+                    (change)="onFotoElegida(u, $event)"
+                    [attr.aria-label]="(u.avatar_url ? 'Cambiar foto de ' : 'Subir foto de ') + u.nombre"
+                  />
+                </label>
+                <div class="nombre-texto">
+                  <span>
+                    {{ u.nombre }}
+                    <span class="tag-tu" *ngIf="u.id === miId">Tú</span>
+                  </span>
+                  <button
+                    class="link-quitar"
+                    *ngIf="u.avatar_url && subiendoFotoId !== u.id"
+                    (click)="quitarFoto(u)"
+                  >
+                    Quitar foto
+                  </button>
+                </div>
+              </div>
+            </td>
+            <td class="text-soft">{{ u.email || '—' }}</td>
+            <td class="text-soft">{{ u.telefono || '—' }}</td>
+            <td>
+              <div class="rol-cell">
+                <div class="roles-chips" role="group" [attr.aria-label]="'Roles de ' + u.nombre">
+                  <button
+                    type="button"
+                    *ngFor="let r of roles"
+                    class="rol-chip"
+                    [class.on]="tieneRol(u, r.valor)"
+                    [attr.aria-pressed]="tieneRol(u, r.valor)"
+                    [disabled]="guardandoId === u.id || rolBloqueado(u, r.valor)"
+                    [title]="rolBloqueado(u, r.valor) ? 'No puedes quitarte el rol de admin a ti mismo' : ''"
+                    (click)="alternarRol(u, r.valor)"
+                  >
+                    {{ r.etiqueta }}
+                  </button>
+                </div>
+                <span class="modo-actual" *ngIf="u.roles.length > 1">Ahora trabajando como {{ etiquetaRol(u.role) }}</span>
+                <select
+                  class="rol-select comision-select"
+                  *ngIf="tieneRol(u, 'vendedor')"
+                  [ngModel]="u.comision_tipo"
+                  (ngModelChange)="cambiarComision(u, $event)"
+                  [disabled]="guardandoId === u.id"
+                  [attr.aria-label]="'Comisión de ' + u.nombre"
+                >
+                  <option value="margen">Comisión por margen</option>
+                  <option value="porcentaje">Comisión por % de la ganancia</option>
+                </select>
+                <label class="pct" *ngIf="tieneRol(u, 'vendedor') && u.comision_tipo === 'porcentaje'" [title]="'Porcentaje de la ganancia para ' + u.nombre">
+                  <input
+                    type="number"
+                    class="num"
+                    min="0"
+                    max="100"
+                    step="1"
+                    inputmode="numeric"
+                    [value]="u.comision_porcentaje"
+                    (change)="cambiarPorcentaje(u, $event)"
+                    [disabled]="guardandoId === u.id"
+                    [attr.aria-label]="'Porcentaje de comisión de ' + u.nombre"
+                  />
+                  <span>% de la ganancia</span>
+                </label>
+              </div>
+            </td>
+            <td>
+              <span class="badge" [class.activo]="u.activo">{{ u.activo ? 'Activo' : 'Inactivo' }}</span>
+            </td>
+            <td>
+              <button
+                class="btn-toggle"
+                *ngIf="u.id !== miId"
+                (click)="toggleActivo(u)"
+                [disabled]="guardandoId === u.id"
+              >
+                {{ u.activo ? 'Desactivar' : 'Reactivar' }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #vacio>
+        <p class="empty-msg">No hay usuarios que coincidan con la búsqueda.</p>
+      </ng-template>
+    </ng-container>
+
+    <ng-template #cargando>
+      <app-esqueleto tipo="lista" [cantidad]="6" etiqueta="Cargando usuarios"></app-esqueleto>
+    </ng-template>
+  </div>
+</div>

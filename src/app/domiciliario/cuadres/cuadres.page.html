@@ -1,0 +1,122 @@
+<div class="page">
+  <header class="head">
+    <h1>Cuadre</h1>
+  </header>
+
+  <ng-container *ngIf="!loading; else cargando">
+    <!-- Cuadre de hoy -->
+    <section aria-labelledby="t-hoy">
+      <h2 id="t-hoy" class="sec-titulo">Hoy</h2>
+
+      <ng-container *ngIf="pedidosHoy.length; else sinEntregas">
+        <div class="resumen">
+          <div class="resumen-total" [class.a-favor]="totalCuadre < 0">
+            <span>{{ totalCuadre >= 0 ? 'Entregas al negocio' : 'El negocio te debe' }}</span>
+            <strong class="num">{{ formatoMoneda(totalCuadre >= 0 ? totalCuadre : -totalCuadre) }}</strong>
+          </div>
+          <dl class="resumen-detalle">
+            <div><dt>Efectivo cobrado</dt><dd class="num">{{ formatoMoneda(totalEfectivo) }}</dd></div>
+            <div><dt>Tus domicilios</dt><dd class="num">− {{ formatoMoneda(totalDomicilios) }}</dd></div>
+            <div><dt>Transferencias</dt><dd class="num">{{ formatoMoneda(totalTransferencia) }}</dd></div>
+          </dl>
+          <p class="resumen-nota">Las transferencias ya le llegaron al negocio; no se suman a lo que entregas.</p>
+        </div>
+
+        <button class="btn btn-primary btn-block" (click)="cerrarCuadre()" [disabled]="cerrando">
+          {{ cerrando ? 'Cerrando…' : 'Cerrar cuadre de hoy (' + pedidosHoy.length + (pedidosHoy.length === 1 ? ' pedido)' : ' pedidos)') }}
+        </button>
+        <p class="error" role="alert" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+        <div class="pedidos">
+          <div class="pedido" *ngFor="let p of pedidosHoy">
+            <div class="pedido-top">
+              <span class="num pedido-num">#{{ p.numero }}</span>
+              <span class="pedido-hora num">{{ formatoHora(p.entregado_at) }}</span>
+              <span class="metodo" [class.transferencia]="p.metodo_pago === 'transferencia'" [class.mixto]="p.metodo_pago === 'mixto'">
+                {{ p.metodo_pago === 'transferencia' ? 'Transferencia' : p.metodo_pago === 'mixto' ? 'Mixto' : 'Efectivo' }}
+              </span>
+              <span class="num pedido-total">{{ formatoMoneda(p.total) }}</span>
+            </div>
+            <p class="pedido-dir">{{ p.direccion }}<ng-container *ngIf="p.barrio">, {{ p.barrio }}</ng-container></p>
+            <p class="pedido-productos">{{ p.productos || 'Sin productos' }}</p>
+            <div class="pedido-bottom">
+              <span class="num">Tu pago {{ formatoMoneda(pagoDe(p)) }}</span>
+              <span class="num pedido-cuadre" [class.a-favor]="cuadreDe(p) < 0">
+                {{ cuadreDe(p) >= 0 ? 'Entregas ' + formatoMoneda(cuadreDe(p)) : 'Te deben ' + formatoMoneda(-cuadreDe(p)) }}
+              </span>
+              <span class="num" *ngIf="p.metodo_pago === 'mixto'">
+                Efectivo {{ formatoMoneda(efectivoDe(p)) }}, transferencia {{ formatoMoneda(transferenciaDe(p)) }}
+              </span>
+              <button class="link" *ngIf="p.metodo_pago === 'transferencia' || p.metodo_pago === 'mixto'" (click)="verComprobante(p)">Ver comprobante</button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #sinEntregas>
+        <div class="vacio">
+          <p class="vacio-titulo">Sin entregas por cuadrar</p>
+          <p>Cuando marques pedidos como entregados, aquí verás cuánto efectivo llevas y cuánto entregas al negocio.</p>
+        </div>
+      </ng-template>
+    </section>
+
+    <!-- Historial -->
+    <section aria-labelledby="t-historial">
+      <div class="historial-head">
+        <h2 id="t-historial">Totales por día</h2>
+        <div class="filtro-fecha-grupo">
+          <input type="date" class="filtro-fecha" [(ngModel)]="filtroFecha" aria-label="Fecha" />
+          <button class="btn-ver-todos" *ngIf="filtroFecha !== hoy" (click)="filtroFecha = hoy">Hoy</button>
+          <button class="btn-ver-todos" *ngIf="filtroFecha" (click)="filtroFecha = ''">Ver todos</button>
+        </div>
+      </div>
+
+      <div class="dias" *ngIf="porDia.length; else vacioHist">
+        <div class="dia" *ngFor="let dia of porDia">
+          <button class="dia-head" (click)="toggleDia(dia.fecha)" [attr.aria-expanded]="diasExpandidos.has(dia.fecha)">
+            <span class="dia-info">
+              <span class="dia-fecha">{{ formatoFecha(dia.fecha) }}</span>
+              <span class="dia-meta num">
+                {{ dia.cantidadPedidos }} pedidos<ng-container *ngIf="dia.cuadres.length > 1">, {{ dia.cuadres.length }} cierres</ng-container>
+              </span>
+            </span>
+            <span class="badge" [class.confirmado]="dia.todoConfirmado">
+              {{ dia.todoConfirmado ? 'Confirmado' : 'Por confirmar' }}
+            </span>
+            <span class="num dia-total">{{ formatoMoneda(dia.totalAEntregar) }}</span>
+          </button>
+
+          <div class="dia-detalle" *ngIf="diasExpandidos.has(dia.fecha)">
+            <dl class="resumen-detalle">
+              <div><dt>Efectivo</dt><dd class="num">{{ formatoMoneda(dia.totalEfectivo) }}</dd></div>
+              <div><dt>Transferencias</dt><dd class="num">{{ formatoMoneda(dia.totalTransferencia) }}</dd></div>
+              <div><dt>Domicilios</dt><dd class="num">{{ formatoMoneda(dia.totalDomicilios) }}</dd></div>
+            </dl>
+            <div class="cierre" *ngFor="let c of dia.cuadres">
+              <span>Cierre {{ formatoHora(c.cerrado_at) }}, {{ c.cantidad_pedidos }} pedidos</span>
+              <span class="badge" [class.confirmado]="c.estado === 'confirmado'">
+                {{ c.estado === 'confirmado' ? 'Confirmado' : 'Por confirmar' }}
+              </span>
+              <span class="num">{{ formatoMoneda(c.total_a_entregar) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #vacioHist>
+        <div class="vacio vacio-sm">
+          <p *ngIf="!historial.length">Todavía no has cerrado ningún cuadre.</p>
+          <p *ngIf="historial.length && filtroFecha === hoy">Todavía no has cerrado el cuadre de hoy.</p>
+          <p *ngIf="historial.length && filtroFecha && filtroFecha !== hoy">No cerraste cuadres el {{ formatoFecha(filtroFecha) }}.</p>
+        </div>
+      </ng-template>
+    </section>
+  </ng-container>
+
+  <ng-template #cargando>
+    <app-esqueleto tipo="lista" [cantidad]="4" etiqueta="Cargando cuadres"></app-esqueleto>
+  </ng-template>
+</div>
+
+<app-imagen-preview [url]="previewUrl" *ngIf="previewUrl" (cerrar)="cerrarPreview()"></app-imagen-preview>
