@@ -2,7 +2,10 @@
   <aside class="sidebar">
     <div class="brand">
       <img class="brand-mark" src="assets/icon/logo.png" alt="" />
-      <span class="brand-name" *ngIf="!collapsed">Home ALS</span>
+      <span class="brand-text" *ngIf="!collapsed">
+        <span class="brand-name">Home ALS</span>
+        <span class="brand-rol">Administración</span>
+      </span>
       <button
         class="icon-btn"
         (click)="toggleCollapse()"
@@ -18,17 +21,21 @@
     </a>
 
     <nav class="menu" aria-label="Secciones">
-      <a
-        *ngFor="let item of menuItems"
-        [routerLink]="item.path"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: item.path === '/admin' }"
-        class="menu-item"
-        [attr.aria-label]="collapsed ? item.label : null"
-      >
-        <ion-icon [name]="item.icon"></ion-icon>
-        <span *ngIf="!collapsed">{{ item.label }}</span>
-      </a>
+      <ng-container *ngFor="let item of menuItems; let i = index">
+        @if (i === 0 || menuItems[i - 1].grupo !== item.grupo) {
+          <span class="menu-grupo" aria-hidden="true">{{ item.grupo }}</span>
+        }
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.path === '/admin' }"
+          class="menu-item"
+          [attr.aria-label]="collapsed ? item.label : null"
+        >
+          <ion-icon [name]="item.icon"></ion-icon>
+          <span *ngIf="!collapsed">{{ item.label }}</span>
+        </a>
+      </ng-container>
     </nav>
 
     <div class="sidebar-footer">
@@ -69,7 +76,7 @@
       <span class="tab-label">Pedidos</span>
     </a>
     <div class="pill-center">
-      <a routerLink="/admin/pedidos/nuevo" class="pill-action" (click)="masAbierto = false; avisos.cerrar()">
+      <a routerLink="/admin/pedidos/nuevo" routerLinkActive="active" class="pill-action" (click)="masAbierto = false; avisos.cerrar()">
         <ion-icon name="add"></ion-icon>
         <span class="tab-label">Nuevo</span>
       </a>

@@ -28,6 +28,7 @@
         [attr.aria-pressed]="filtroEstado === e.valor"
         (click)="filtroEstado = e.valor"
       >
+        <span class="tab-iman" [attr.data-estado]="e.valor" aria-hidden="true"></span>
         {{ e.etiqueta }}
         <span class="num count">{{ conteo(e.valor) }}</span>
       </button>

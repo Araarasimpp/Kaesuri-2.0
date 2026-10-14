@@ -14,29 +14,29 @@
 // ---------- Encabezado ----------
 .page-header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
-  min-height: 52px;
-  padding: 0 20px;
-  border-bottom: 1px solid var(--border-soft);
+  padding: 28px 24px 18px;
 }
 
 .title {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
   margin-right: auto;
   min-width: 0;
 }
 
 .title h1 {
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
 }
 
 .subtitle {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--text-soft);
   white-space: nowrap;
 }
@@ -49,9 +49,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 260px;
-  height: 32px;
-  padding: 0 10px;
+  width: 280px;
+  height: 40px;
+  padding: 0 12px;
   box-sizing: border-box;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
@@ -76,7 +76,7 @@
   outline: none;
   background: none;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--fs-base);
 }
 
 .search input::placeholder {
@@ -88,14 +88,14 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 32px;
-  padding: 0 12px;
+  height: 40px;
+  padding: 0 16px;
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--fs-base);
+  font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
@@ -146,9 +146,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 0 16px;
-  border-bottom: 1px solid var(--border-soft);
+  min-height: 52px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
 }
 
 .tabs {
@@ -166,15 +166,21 @@
 
 .tab {
   flex-shrink: 0;
-  height: 28px;
-  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   background: none;
   color: var(--text-soft);
-  font-size: 13px;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 
 .tab:hover {
@@ -184,26 +190,55 @@
 
 .tab.active {
   border-color: var(--border-strong);
-  background: var(--surface-2);
+  background: var(--surface);
   color: var(--text);
-  font-weight: 500;
+}
+
+// Imán de color de cada estado en su pestaña
+.tab-iman {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.tab-iman[data-estado='pendiente'] { background: var(--st-pendiente); }
+.tab-iman[data-estado='en_ruta'] { background: var(--st-ruta); }
+.tab-iman[data-estado='entregado'] { background: var(--st-entregado); }
+.tab-iman[data-estado='cancelado'] { background: var(--st-cancelado); }
+.tab-iman[data-estado='todos'] {
+  background: conic-gradient(var(--st-pendiente) 0 25%, var(--st-ruta) 0 50%, var(--st-entregado) 0 75%, var(--st-cancelado) 0);
 }
 
 .tab .count {
-  margin-left: 4px;
-  color: var(--text-muted);
-  font-weight: 400;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-soft);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+
+.tab.active .count {
+  background: var(--text);
+  color: var(--surface);
 }
 
 .select-ghost {
   flex-shrink: 0;
-  height: 28px;
-  padding: 0 8px;
+  height: 34px;
+  padding: 0 10px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text-2);
-  font-size: 12px;
+  font-family: inherit;
+  font-size: var(--fs-sm);
   cursor: pointer;
 }
 
@@ -215,11 +250,11 @@
 
 .row-grid {
   display: grid;
-  grid-template-columns: 16px 52px 16px minmax(0, 1fr) 120px 180px 92px 104px 84px 28px;
+  grid-template-columns: 16px 60px 18px minmax(0, 1fr) 120px 180px 92px 104px 84px 28px;
   grid-template-areas: 'chk num st main barrio dom rot total fecha menu';
   align-items: center;
-  column-gap: 12px;
-  padding: 0 20px;
+  column-gap: 14px;
+  padding: 0 24px;
 }
 
 .check {
@@ -254,9 +289,12 @@
 .c-menu { grid-area: menu; position: relative; display: flex; justify-content: flex-end; }
 
 .list-head {
-  height: 34px;
-  border-bottom: 1px solid var(--border-soft);
-  font-size: 12px;
+  height: 38px;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   color: var(--text-muted);
 }
 
@@ -267,11 +305,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 36px;
-  padding: 0 20px;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border-soft);
-  font-size: 13px;
+  height: 46px;
+  padding: 0 24px;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(1.4) blur(8px);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-md);
 }
 
 .group-head .check {
@@ -279,24 +318,37 @@
 }
 
 .group-name {
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .group-count {
-  color: var(--text-muted);
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+  color: var(--text-soft);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
 }
 
 .group-sum {
   margin-left: auto;
   padding-right: 112px; // alinea con la columna de total
-  font-size: 12px;
-  color: var(--text-soft);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text);
 }
 
 .row {
-  min-height: 44px;
+  min-height: 52px;
   border-bottom: 1px solid var(--border-soft);
-  font-size: 13px;
+  font-size: var(--fs-sm);
   transition: background var(--dur) var(--ease);
 }
 
@@ -308,8 +360,15 @@
   background: var(--accent-wash);
 }
 
+// El número de pedido es su identidad en el tablero
 .c-num {
-  font-size: 12px;
+  font-size: var(--fs-md);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.row.closed .c-num {
   color: var(--text-muted);
 }
 
@@ -390,7 +449,7 @@
   bottom: 3px;
   padding: 1px 5px;
   border-radius: 4px;
-  background: rgba(15, 16, 19, 0.75);
+  background: rgba(21, 20, 43, 0.75);
   color: #ffffff;
   font-size: 11px;
   font-weight: 600;
@@ -416,7 +475,8 @@
 }
 
 .cliente {
-  font-weight: 500;
+  font-size: var(--fs-base);
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -434,6 +494,14 @@
 
 .row.closed .cliente {
   color: var(--text-2);
+}
+
+// Lo cancelado no desaparece: queda tachado en su carril
+.group[aria-label='Cancelados'] .cliente,
+.group[aria-label='Cancelados'] .c-total {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--st-cancelado);
 }
 
 .c-barrio,
@@ -499,7 +567,8 @@
 }
 
 .c-rot.pending {
-  color: var(--st-ruta-text);
+  color: var(--text);
+  font-weight: 600;
 }
 
 .c-rot ion-icon {
@@ -754,8 +823,9 @@
 @media (max-width: 720px) {
   .page-header {
     flex-wrap: wrap;
-    padding: 12px 16px;
-    gap: 10px;
+    align-items: center;
+    padding: 20px 16px 12px;
+    gap: 12px;
   }
 
   .title {
@@ -764,13 +834,13 @@
   }
 
   .title h1 {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .search {
     order: 3;
     width: 100%;
-    height: 40px;
+    height: 44px;
   }
 
   .search input {
@@ -782,8 +852,8 @@
   }
 
   .btn-primary {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     justify-content: center;
   }
@@ -794,6 +864,7 @@
 
   .toolbar {
     padding: 0 12px;
+    background: var(--surface);
   }
 
   .select-ghost {

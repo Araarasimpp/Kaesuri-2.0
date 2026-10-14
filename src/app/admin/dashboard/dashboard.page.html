@@ -38,6 +38,67 @@
         </a>
       </div>
 
+      <!-- Tablero de hoy: un carril por estado, como el tablero de la bodega -->
+      <section class="tablero" aria-labelledby="t-tablero">
+        <div class="section-head">
+          <h2 id="t-tablero">Tablero de hoy</h2>
+          <span class="num count">{{ totalHoy }} {{ totalHoy === 1 ? 'pedido' : 'pedidos' }}</span>
+          <a class="ver-todos" routerLink="/admin/pedidos">Ver todos los pedidos</a>
+        </div>
+
+        @if (totalHoy) {
+          <div class="barra-estados" aria-hidden="true">
+            @for (c of carriles; track c.estado) {
+              <span [attr.data-estado]="c.estado" [style.width.%]="pct(c)"></span>
+            }
+            @if (cancelados) {
+              <span data-estado="cancelado" [style.width.%]="pct(cancelados)"></span>
+            }
+          </div>
+        }
+
+        <div class="carriles">
+          @for (c of carriles; track c.estado) {
+            <div class="carril" [attr.data-estado]="c.estado">
+              <div class="carril-head">
+                <app-estado-icon [estado]="c.estado" [size]="20"></app-estado-icon>
+                <span class="carril-nombre">{{ c.etiqueta }}</span>
+                <span class="carril-cant num">{{ c.cantidad }}</span>
+              </div>
+              <p class="carril-total num">{{ formatoMoneda(c.total) }}</p>
+              @if (c.pedidos.length) {
+                <ul class="fichas">
+                  @for (p of c.pedidos; track p.id) {
+                    <li class="ficha" [style.--vt]="'pedido-' + p.numero">
+                      <span class="ficha-num num">#{{ p.numero }}</span>
+                      <span class="ficha-cliente">{{ p.cliente_nombre }}</span>
+                      <span class="ficha-hora num">{{ horaCorta(p.created_at) }}</span>
+                      <span class="ficha-total num">{{ formatoMoneda(p.total) }}</span>
+                    </li>
+                  }
+                  @if (c.cantidad > c.pedidos.length) {
+                    <li class="ficha-mas">
+                      <a routerLink="/admin/pedidos">y {{ c.cantidad - c.pedidos.length }} más</a>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p class="carril-vacio">
+                  {{ c.estado === 'pendiente' ? 'Nada esperando' : c.estado === 'en_ruta' ? 'Nadie en la calle' : 'Aún sin entregas' }}
+                </p>
+              }
+            </div>
+          }
+        </div>
+        @if (cancelados?.cantidad) {
+          <p class="cancelados-hoy num">
+            <app-estado-icon estado="cancelado" [size]="14"></app-estado-icon>
+            {{ cancelados!.cantidad }} {{ cancelados!.cantidad === 1 ? 'cancelado' : 'cancelados' }} hoy,
+            <s>{{ formatoMoneda(cancelados!.total) }}</s>
+          </p>
+        }
+      </section>
+
       <!-- Ventas -->
       <section class="panel" aria-labelledby="t-ventas">
         <div class="panel-head">
@@ -111,29 +172,6 @@
         </section>
 
         <div class="col-side">
-          <!-- Estados de hoy -->
-          <section aria-labelledby="t-estados">
-            <div class="section-head">
-              <h2 id="t-estados">Pedidos de hoy</h2>
-            </div>
-            <div class="estados">
-              <div class="donut">
-                <canvas #canvasEstados role="img" aria-label="Pedidos de hoy por estado"></canvas>
-                <div class="donut-centro" aria-hidden="true">
-                  <span class="num">{{ pctEntregado }}%</span>
-                  <small>entregado</small>
-                </div>
-              </div>
-              <ul class="leyenda">
-                <li *ngFor="let e of estadosHoy">
-                  <app-estado-icon [estado]="e.estado" [size]="12"></app-estado-icon>
-                  <span class="leyenda-nombre">{{ e.etiqueta }}</span>
-                  <span class="num">{{ e.cantidad }}</span>
-                </li>
-              </ul>
-            </div>
-          </section>
-
           <!-- En ruta -->
           <section aria-labelledby="t-ruta">
             <div class="section-head">
@@ -149,20 +187,6 @@
             <p class="vacio-inline" *ngIf="!domiciliarios.length">Nadie está en ruta en este momento.</p>
           </section>
 
-          <!-- Recientes -->
-          <section aria-labelledby="t-recientes">
-            <div class="section-head">
-              <h2 id="t-recientes">Últimos pedidos</h2>
-              <a class="ver-todos" routerLink="/admin/pedidos">Ver todos</a>
-            </div>
-            <div class="reciente" *ngFor="let p of recientes">
-              <app-estado-icon [estado]="p.estado"></app-estado-icon>
-              <span class="num reciente-num">#{{ p.numero }}</span>
-              <span class="reciente-cliente">{{ p.cliente_nombre }}</span>
-              <span class="num reciente-total">{{ formatoMoneda(p.total) }}</span>
-            </div>
-            <p class="vacio-inline" *ngIf="!recientes.length">Todavía no hay pedidos.</p>
-          </section>
         </div>
       </div>
     </div>

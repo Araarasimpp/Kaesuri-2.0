@@ -2,7 +2,10 @@
   <aside class="sidebar">
     <div class="brand">
       <img class="brand-mark" src="assets/icon/logo.png" alt="" />
-      <span class="brand-name" *ngIf="!collapsed">Home ALS</span>
+      <span class="brand-text" *ngIf="!collapsed">
+        <span class="brand-name">Home ALS</span>
+        <span class="brand-rol">Despacho</span>
+      </span>
       <button
         class="icon-btn"
         (click)="toggleCollapse()"
@@ -69,7 +72,7 @@
       <span class="tab-label">Pedidos</span>
     </a>
     <div class="pill-center">
-      <a routerLink="/despachador/pedidos/nuevo" class="pill-action" (click)="masAbierto = false; avisos.cerrar()">
+      <a routerLink="/despachador/pedidos/nuevo" routerLinkActive="active" class="pill-action" (click)="masAbierto = false; avisos.cerrar()">
         <ion-icon name="add"></ion-icon>
         <span class="tab-label">Nuevo</span>
       </a>

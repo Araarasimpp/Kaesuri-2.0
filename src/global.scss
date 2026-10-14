@@ -42,6 +42,17 @@ button {
 
 ::selection {
   background: var(--accent-soft);
+  color: var(--text);
+}
+
+input,
+textarea {
+  caret-color: var(--accent);
+}
+
+::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
 }
 
 :focus-visible {
@@ -51,17 +62,93 @@ button {
 
 a {
   color: var(--accent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 /* Cifras alineadas en columnas: plata, cantidades, números de pedido */
 .num {
   font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
 }
 
 /* Scrollbars discretos en escritorio */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Imán de estado con texto: <span class="iman iman-en_ruta">En ruta</span> */
+.iman {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px 0 8px;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.iman::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.iman-pendiente {
+  background: var(--st-pendiente-wash);
+  color: var(--st-pendiente);
+}
+
+.iman-en_ruta {
+  background: var(--st-ruta-wash);
+  color: var(--st-ruta-text);
+}
+
+.iman-entregado {
+  background: var(--st-entregado-wash);
+  color: var(--st-entregado-text);
+}
+
+.iman-cancelado {
+  background: var(--st-cancelado-wash);
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+/* Etiqueta pequeña en mayúsculas para campos y columnas (nunca encima de un título) */
+.etiqueta {
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,7 +1,7 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(18, 21, 28, 0.5);
+  background: rgba(21, 20, 43, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -161,8 +161,8 @@
 }
 
 .btn-primary {
-  background: var(--k-ink);
-  color: var(--k-paper);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .btn-primary:disabled {

@@ -12,7 +12,8 @@
 }
 
 .page-header h1 {
-  font-size: 26px;
+  font-size: var(--fs-2xl);
+  letter-spacing: var(--tracking-tight);
   font-weight: 700;
   margin: 0;
 }
@@ -152,23 +153,23 @@ tbody tr:last-child td {
 }
 
 .badge-ok {
-  background: rgba(47, 143, 130, 0.12);
-  color: var(--k-teal);
+  background: var(--st-entregado-wash);
+  color: var(--st-entregado-text);
 }
 
 .badge-bajo {
-  background: rgba(232, 163, 61, 0.15);
-  color: var(--k-amber);
+  background: var(--st-ruta-wash);
+  color: var(--st-ruta-text);
 }
 
 .badge-info {
-  background: rgba(18, 21, 28, 0.08);
+  background: var(--st-pendiente-wash);
   color: var(--k-text-soft);
 }
 
 .badge-coral {
-  background: rgba(214, 95, 95, 0.12);
-  color: var(--k-coral);
+  background: var(--danger-wash);
+  color: var(--danger);
 }
 
 tfoot td {

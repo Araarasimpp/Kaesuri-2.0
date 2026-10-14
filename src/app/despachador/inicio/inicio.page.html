@@ -1,54 +1,61 @@
 <div class="inicio-despachador">
   <header class="page-header">
     <h1>Inicio</h1>
-    <a routerLink="/despachador/pedidos/nuevo" class="btn-primary">+ Nuevo pedido</a>
+    <a routerLink="/despachador/pedidos/nuevo" class="btn-primary">
+      <ion-icon name="add" aria-hidden="true"></ion-icon>
+      Nuevo pedido
+    </a>
   </header>
 
   <ng-container *ngIf="!loading; else cargando">
-    <section class="stats-grid">
+    <!-- Cifras como columnas de tablero: el dinero primero, luego un imán por estado -->
+    <section class="stats-grid" aria-label="Resumen de hoy">
       <div class="stat-card destacada">
         <span class="stat-label">Ventas de hoy</span>
-        <span class="stat-valor">{{ formatoMoneda(ventasHoy) }}</span>
+        <span class="stat-valor num">{{ formatoMoneda(ventasHoy) }}</span>
       </div>
+      <a class="stat-card" routerLink="/despachador/pedidos">
+        <span class="stat-label"><app-estado-icon estado="pendiente" [size]="14"></app-estado-icon>Pendientes</span>
+        <span class="stat-valor num">{{ pedidosPendientes }}</span>
+      </a>
+      <a class="stat-card" routerLink="/despachador/pedidos">
+        <span class="stat-label"><app-estado-icon estado="en_ruta" [size]="14"></app-estado-icon>En ruta</span>
+        <span class="stat-valor num">{{ pedidosEnRuta }}</span>
+      </a>
       <div class="stat-card">
-        <span class="stat-label">Pendientes</span>
-        <span class="stat-valor">{{ pedidosPendientes }}</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">En ruta</span>
-        <span class="stat-valor">{{ pedidosEnRuta }}</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">Entregados hoy</span>
-        <span class="stat-valor">{{ entregadosHoy }}</span>
+        <span class="stat-label"><app-estado-icon estado="entregado" [size]="14"></app-estado-icon>Entregados hoy</span>
+        <span class="stat-valor num">{{ entregadosHoy }}</span>
       </div>
     </section>
 
-    <section class="panel">
-      <div class="panel-header">
-        <h2>Cuadres por confirmar</h2>
-        <a routerLink="/despachador/cuadres" class="ver-todos">Ver todos</a>
-      </div>
-      <div class="reminder-item" *ngFor="let c of cuadresPendientes.slice(0, 5)">
-        <span>{{ nombreDomiciliario(c.domiciliario_id) }}</span>
-        <span class="reminder-monto">{{ formatoMoneda(c.total_a_entregar) }}</span>
-      </div>
-      <p class="empty-msg" *ngIf="!cuadresPendientes.length">No hay cuadres pendientes de confirmar.</p>
-    </section>
+    <div class="cols">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Pedidos recientes</h2>
+          <a routerLink="/despachador/pedidos" class="ver-todos">Ver todos</a>
+        </div>
+        <div class="pedido-row" *ngFor="let p of pedidosRecientes" [class.cancelado]="p.estado === 'cancelado'">
+          <app-estado-icon [estado]="p.estado" [size]="18"></app-estado-icon>
+          <span class="pedido-num num">#{{ p.numero }}</span>
+          <span class="pedido-cliente">{{ p.cliente_nombre }}</span>
+          <span class="pedido-estado">{{ etiquetaEstado(p.estado) }}</span>
+          <span class="pedido-total num">{{ formatoMoneda(p.total) }}</span>
+        </div>
+        <p class="empty-msg" *ngIf="!pedidosRecientes.length">Todavía no hay pedidos.</p>
+      </section>
 
-    <section class="panel">
-      <div class="panel-header">
-        <h2>Pedidos recientes</h2>
-        <a routerLink="/despachador/pedidos" class="ver-todos">Ver todos</a>
-      </div>
-      <div class="pedido-row" *ngFor="let p of pedidosRecientes">
-        <span class="pedido-num text-soft">#{{ p.numero }}</span>
-        <span class="pedido-cliente">{{ p.cliente_nombre }}</span>
-        <span class="badge" [ngClass]="claseEstado(p.estado)">{{ etiquetaEstado(p.estado) }}</span>
-        <span class="pedido-total">{{ formatoMoneda(p.total) }}</span>
-      </div>
-      <p class="empty-msg" *ngIf="!pedidosRecientes.length">Todavía no hay pedidos.</p>
-    </section>
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Cuadres por confirmar</h2>
+          <a routerLink="/despachador/cuadres" class="ver-todos">Ver todos</a>
+        </div>
+        <div class="reminder-item" *ngFor="let c of cuadresPendientes.slice(0, 5)">
+          <span>{{ nombreDomiciliario(c.domiciliario_id) }}</span>
+          <span class="reminder-monto num">{{ formatoMoneda(c.total_a_entregar) }}</span>
+        </div>
+        <p class="empty-msg" *ngIf="!cuadresPendientes.length">No hay cuadres pendientes de confirmar.</p>
+      </section>
+    </div>
   </ng-container>
 
   <ng-template #cargando>

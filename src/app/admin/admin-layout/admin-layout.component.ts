@@ -38,6 +38,8 @@ interface MenuItem {
   label: string;
   path: string;
   icon: string;
+  /** Sección del menú lateral */
+  grupo: string;
 }
 
 /** Minutos sin usar la app antes de cerrar la sesión del admin. */
@@ -58,25 +60,25 @@ const MINUTOS_INACTIVIDAD = 30;
     AvisoInactividadComponent,
   ],
   templateUrl: './admin-layout.component.html',
-  styleUrls: ['../../shared/pill-nav.scss', './admin-layout.component.scss'],
+  styleUrls: ['../../shared/shell.scss', '../../shared/pill-nav.scss', './admin-layout.component.scss'],
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   collapsed = localStorage.getItem('sidebar-colapsado') === '1';
   masAbierto = false;
 
   menuItems: MenuItem[] = [
-    { label: 'Inicio', path: '/admin', icon: 'home-outline' },
-    { label: 'Pedidos', path: '/admin/pedidos', icon: 'receipt-outline' },
-    { label: 'Venta en local', path: '/admin/venta-local', icon: 'storefront-outline' },
-    { label: 'Ventas del local', path: '/admin/ventas-del-local', icon: 'list-outline' },
-    { label: 'Cuadres', path: '/admin/cuadres', icon: 'wallet-outline' },
-    { label: 'Clientes', path: '/admin/clientes', icon: 'people-circle-outline' },
-    { label: 'Productos', path: '/admin/productos', icon: 'cube-outline' },
-    { label: 'Usuarios', path: '/admin/usuarios', icon: 'people-outline' },
-    { label: 'Reportes', path: '/admin/reportes', icon: 'bar-chart-outline' },
-    { label: 'Actividad', path: '/admin/actividad', icon: 'time-outline' },
-    { label: 'Configuración', path: '/admin/configuracion', icon: 'settings-outline' },
-    { label: 'Mi seguridad', path: '/admin/seguridad', icon: 'shield-checkmark-outline' },
+    { label: 'Inicio', path: '/admin', icon: 'home-outline', grupo: 'Operación' },
+    { label: 'Pedidos', path: '/admin/pedidos', icon: 'receipt-outline', grupo: 'Operación' },
+    { label: 'Venta en local', path: '/admin/venta-local', icon: 'storefront-outline', grupo: 'Operación' },
+    { label: 'Ventas del local', path: '/admin/ventas-del-local', icon: 'list-outline', grupo: 'Operación' },
+    { label: 'Cuadres', path: '/admin/cuadres', icon: 'wallet-outline', grupo: 'Operación' },
+    { label: 'Clientes', path: '/admin/clientes', icon: 'people-circle-outline', grupo: 'Negocio' },
+    { label: 'Productos', path: '/admin/productos', icon: 'cube-outline', grupo: 'Negocio' },
+    { label: 'Reportes', path: '/admin/reportes', icon: 'bar-chart-outline', grupo: 'Negocio' },
+    { label: 'Usuarios', path: '/admin/usuarios', icon: 'people-outline', grupo: 'Equipo y sistema' },
+    { label: 'Actividad', path: '/admin/actividad', icon: 'time-outline', grupo: 'Equipo y sistema' },
+    { label: 'Configuración', path: '/admin/configuracion', icon: 'settings-outline', grupo: 'Equipo y sistema' },
+    { label: 'Mi seguridad', path: '/admin/seguridad', icon: 'shield-checkmark-outline', grupo: 'Equipo y sistema' },
   ];
 
   /** En el celular, lo que no cabe en la barra va en "Más" */

@@ -56,9 +56,9 @@
           <button class="accion" (click)="whatsapp(p)" [disabled]="!p.cliente_telefono" [attr.aria-label]="'WhatsApp a ' + p.cliente_nombre">
             <ion-icon name="logo-whatsapp"></ion-icon>
           </button>
-          <button class="accion accion-texto" (click)="navegar(p)">
+          <button class="accion accion-texto" (click)="navegar(p)" aria-label="Cómo llegar">
             <ion-icon name="navigate-outline" aria-hidden="true"></ion-icon>
-            Cómo llegar
+            Ruta
           </button>
           <button class="btn btn-primary entregar" (click)="abrirEntrega(p)">Entregar</button>
         </div>

@@ -65,9 +65,9 @@ import { NotificacionesService, Aviso } from '../../core/services/notificaciones
   `,
   styles: [
     `
-      .fondo { position: fixed; inset: 0; z-index: 140; border: none; padding: 0; background: rgba(15, 16, 19, 0.2); }
+      .fondo { position: fixed; inset: 0; z-index: 140; border: none; padding: 0; background: rgba(21, 20, 43, 0.2); }
       .panel {
-        position: fixed; z-index: 141; left: 240px; bottom: 16px; width: 380px;
+        position: fixed; z-index: 141; left: calc(var(--sidebar-w, 248px) + 8px); bottom: 16px; width: 380px;
         --panel-max: min(560px, calc(100vh - 32px)); max-height: var(--panel-max); display: flex; flex-direction: column;
         background: var(--surface); color: var(--text); border: 1px solid var(--border);
         border-radius: var(--radius-lg); box-shadow: var(--shadow-pop); overflow: hidden;

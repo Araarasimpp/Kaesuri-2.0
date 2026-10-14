@@ -10,12 +10,10 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import {
-  ArcElement,
   BarController,
   BarElement,
   CategoryScale,
   Chart,
-  DoughnutController,
   LinearScale,
   Tooltip,
 } from 'chart.js';
@@ -26,7 +24,7 @@ import { AvatarComponent } from '../../shared/avatar/avatar.component';
 import { EstadoPedido } from '../../shared/models/models';
 
 // Solo lo que usamos de Chart.js, para no cargar la librería entera
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, DoughnutController, ArcElement);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
 
 type Periodo = 7 | 30 | 90;
 type Metrica = 'ventas' | 'pedidos';
@@ -38,6 +36,15 @@ interface PedidoResumen {
   total: number;
   estado: EstadoPedido;
   created_at: string;
+}
+
+/** Un carril del tablero de hoy: los pedidos de un estado, los más nuevos primero */
+interface Carril {
+  estado: EstadoPedido;
+  etiqueta: string;
+  cantidad: number;
+  total: number;
+  pedidos: PedidoResumen[];
 }
 
 interface Tarea {
@@ -68,7 +75,8 @@ interface Bucket {
 
 // Una venta cuenta cuando se entrega (incluye las ventas en local, que nacen entregadas)
 const ESTADOS_VENTA = ['entregado'];
-const ORDEN_ESTADOS: EstadoPedido[] = ['entregado', 'en_ruta', 'pendiente', 'cancelado'];
+// Como se mueve un pedido por el tablero, de izquierda a derecha
+const ORDEN_ESTADOS: EstadoPedido[] = ['pendiente', 'en_ruta', 'entregado', 'cancelado'];
 const ETIQUETAS: Record<EstadoPedido, string> = {
   pendiente: 'Pendientes',
   en_ruta: 'En ruta',
@@ -103,7 +111,6 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   tareas: Tarea[] = [];
   domiciliarios: DomiciliarioActivo[] = [];
-  recientes: PedidoResumen[] = [];
 
   // Gráfica de ventas
   periodo: Periodo = 7;
@@ -119,22 +126,18 @@ export class DashboardPage implements OnInit, OnDestroy {
   variacion: number | null = null; // % contra el periodo anterior
   cargandoGrafica = false;
 
-  // Gráfica de estados de hoy
-  estadosHoy: { estado: EstadoPedido; etiqueta: string; cantidad: number; pct: number }[] = [];
-  pctEntregado = 0;
+  // Tablero de hoy: un carril por estado y la barra proporcional de arriba
+  readonly fichasPorCarril = 4;
+  carriles: Carril[] = [];
+  cancelados: Carril | null = null;
+  totalHoy = 0;
 
   @ViewChild('canvasVentas') set canvasVentas(ref: ElementRef<HTMLCanvasElement> | undefined) {
     this.refVentas = ref;
     if (ref) queueMicrotask(() => this.dibujarVentas());
   }
-  @ViewChild('canvasEstados') set canvasEstados(ref: ElementRef<HTMLCanvasElement> | undefined) {
-    this.refEstados = ref;
-    if (ref) queueMicrotask(() => this.dibujarEstados());
-  }
   private refVentas?: ElementRef<HTMLCanvasElement>;
-  private refEstados?: ElementRef<HTMLCanvasElement>;
   private graficaVentas: Chart | null = null;
-  private graficaEstados: Chart | null = null;
 
   private canal: RealtimeChannel | null = null;
   private temporizador: ReturnType<typeof setTimeout> | null = null;
@@ -149,14 +152,12 @@ export class DashboardPage implements OnInit, OnDestroy {
     // Redibuja las gráficas con los colores correctos al cambiar a modo oscuro/claro
     this.observadorTema = new MutationObserver(() => {
       this.dibujarVentas();
-      this.dibujarEstados();
     });
     this.observadorTema.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
 
   ngOnDestroy(): void {
     this.graficaVentas?.destroy();
-    this.graficaEstados?.destroy();
     this.observadorTema?.disconnect();
     if (this.temporizador) clearTimeout(this.temporizador);
     if (this.canal) this.supabase.client.removeChannel(this.canal);
@@ -198,9 +199,13 @@ export class DashboardPage implements OnInit, OnDestroy {
       .single();
     const umbral = config?.stock_bajo_umbral ?? 5;
 
-    const [hoyRes, entregadosHoyRes, gananciaRes, sinAsignarRes, cuadresRes, stockRes, enRutaRes, recientesRes, perfilesRes] =
+    const [hoyRes, entregadosHoyRes, gananciaRes, sinAsignarRes, cuadresRes, stockRes, enRutaRes, perfilesRes] =
       await Promise.all([
-        db.from('pedidos').select('total, estado').gte('created_at', inicioHoy),
+        db
+          .from('pedidos')
+          .select('id, numero, cliente_nombre, total, estado, created_at')
+          .gte('created_at', inicioHoy)
+          .order('created_at', { ascending: false }),
         // Ventas de hoy = lo ENTREGADO hoy (aunque el pedido se haya creado otro día)
         db.from('pedidos').select('total').eq('estado', 'entregado').gte('entregado_at', inicioHoy),
         // Ganancia real de hoy: ventas − costos − comisiones (los dos esquemas de vendedor)
@@ -223,11 +228,6 @@ export class DashboardPage implements OnInit, OnDestroy {
           .order('stock', { ascending: true })
           .limit(5),
         db.from('pedidos').select('domiciliario_id, total').eq('estado', 'en_ruta'),
-        db
-          .from('pedidos')
-          .select('id, numero, cliente_nombre, total, estado, created_at')
-          .order('created_at', { ascending: false })
-          .limit(6),
         db.from('profiles').select('*'),
       ]);
 
@@ -235,7 +235,7 @@ export class DashboardPage implements OnInit, OnDestroy {
     const nombre = (id: string) => perfiles.get(id)?.nombre ?? 'Domiciliario';
 
     // Hoy
-    const hoy = (hoyRes.data ?? []) as { total: number; estado: EstadoPedido }[];
+    const hoy = (hoyRes.data ?? []) as PedidoResumen[];
     this.ventasHoy = ((entregadosHoyRes.data ?? []) as { total: number }[]).reduce(
       (s, p) => s + Number(p.total || 0),
       0
@@ -250,12 +250,31 @@ export class DashboardPage implements OnInit, OnDestroy {
     this.pedidosHoy = hoy.filter((p) => p.estado !== 'cancelado').length;
     this.entregadosHoy = hoy.filter((p) => p.estado === 'entregado').length;
 
-    const total = hoy.length;
-    this.estadosHoy = ORDEN_ESTADOS.map((estado) => {
-      const cantidad = hoy.filter((p) => p.estado === estado).length;
-      return { estado, etiqueta: ETIQUETAS[estado], cantidad, pct: total ? Math.round((cantidad / total) * 100) : 0 };
-    });
-    this.pctEntregado = total ? Math.round((this.entregadosHoy / total) * 100) : 0;
+    this.totalHoy = hoy.length;
+    const carril = (estado: EstadoPedido): Carril => {
+      const pedidos = hoy.filter((p) => p.estado === estado);
+      return {
+        estado,
+        etiqueta: ETIQUETAS[estado],
+        cantidad: pedidos.length,
+        total: pedidos.reduce((s, p) => s + Number(p.total || 0), 0),
+        pedidos: pedidos.slice(0, this.fichasPorCarril),
+      };
+    };
+    const aplicar = () => {
+      this.carriles = ORDEN_ESTADOS.filter((e) => e !== 'cancelado').map(carril);
+      this.cancelados = carril('cancelado');
+      this.cdr.detectChanges();
+    };
+    // Cuando un pedido cambia de estado (tiempo real), su ficha viaja al nuevo
+    // carril con View Transitions. Sin soporte o con movimiento reducido, cambia sin más.
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+    const animar =
+      this.carriles.length > 0 &&
+      typeof doc.startViewTransition === 'function' &&
+      !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (animar) doc.startViewTransition!(aplicar);
+    else aplicar();
 
     // En ruta
     const enRuta = (enRutaRes.data ?? []) as { domiciliario_id: string | null; total: number }[];
@@ -317,10 +336,17 @@ export class DashboardPage implements OnInit, OnDestroy {
       });
     }
     this.tareas = tareas;
-
-    this.recientes = (recientesRes.data ?? []) as PedidoResumen[];
-    this.dibujarEstados();
   }
+
+  /** Ancho de cada estado en la barra proporcional del tablero */
+  pct(c: Carril): number {
+    return this.totalHoy ? (c.cantidad / this.totalHoy) * 100 : 0;
+  }
+
+  horaCorta(iso: string): string {
+    return new Date(iso).toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Bogota' });
+  }
+
 
   // ----------------------------------------------------------------- Ventas
   async cambiarPeriodo(p: Periodo): Promise<void> {
@@ -515,61 +541,6 @@ export class DashboardPage implements OnInit, OnDestroy {
               maxTicksLimit: 5,
               precision: 0,
               callback: (v) => (this.metrica === 'ventas' ? this.monedaCorta(Number(v)) : String(v)),
-            },
-          },
-        },
-      },
-    });
-  }
-
-  private dibujarEstados(): void {
-    const canvas = this.refEstados?.nativeElement;
-    if (!canvas) return;
-
-    const colores: Record<EstadoPedido, string> = {
-      entregado: this.css('--st-entregado'),
-      en_ruta: this.css('--st-ruta'),
-      pendiente: this.css('--border-strong'),
-      cancelado: this.css('--st-cancelado'),
-    };
-    const conDatos = this.estadosHoy.filter((e) => e.cantidad > 0);
-    const data = conDatos.length ? conDatos.map((e) => e.cantidad) : [1];
-    const bg = conDatos.length ? conDatos.map((e) => colores[e.estado]) : [this.css('--surface-2')];
-    const labels = conDatos.length ? conDatos.map((e) => e.etiqueta) : ['Sin pedidos'];
-
-    if (this.graficaEstados) {
-      const g = this.graficaEstados;
-      g.data.labels = labels;
-      g.data.datasets[0].data = data;
-      (g.data.datasets[0] as any).backgroundColor = bg;
-      (g.options.plugins as any).tooltip.enabled = conDatos.length > 0;
-      g.update();
-      return;
-    }
-
-    this.graficaEstados = new Chart(canvas, {
-      type: 'doughnut',
-      data: {
-        labels,
-        datasets: [{ data, backgroundColor: bg, borderWidth: 0, hoverOffset: 4 }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '72%',
-        animation: { duration: 250 },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            enabled: conDatos.length > 0,
-            displayColors: false,
-            bodyFont: { family: this.css('--ui-font') },
-            callbacks: {
-              label: (item) => {
-                const total = (item.dataset.data as number[]).reduce((s, v) => s + v, 0);
-                const pct = total ? Math.round((Number(item.raw) / total) * 100) : 0;
-                return `${item.label}: ${item.raw} (${pct}%)`;
-              },
             },
           },
         },

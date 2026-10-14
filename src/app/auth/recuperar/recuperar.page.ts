@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { SupabaseService } from '../../core/services/supabase.service';
+import { AuthMarcaComponent } from '../marca/auth-marca.component';
 
 @Component({
   selector: 'app-recuperar',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, AuthMarcaComponent],
   templateUrl: './recuperar.page.html',
   styleUrls: ['../auth-shell.scss'],
 })
