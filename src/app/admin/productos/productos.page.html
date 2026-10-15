@@ -45,7 +45,9 @@
   <div class="table-card">
     <header class="mod-head">
       <h2 class="mod-tab">Productos</h2>
-      <span class="mod-meta num" *ngIf="!loading">{{ filtrados.length }}</span>
+      @if (!loading) {
+        <span class="mod-meta num">{{ filtrados.length }}</span>
+      }
     </header>
     <ng-container *ngIf="!loading; else cargando">
       <table *ngIf="filtrados.length; else vacio">
