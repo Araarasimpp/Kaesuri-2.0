@@ -58,6 +58,15 @@ export const ADMIN_ROUTES: Routes = [
           import('../vendedor/nuevo-pedido/nuevo-pedido.page').then((m) => m.NuevoPedidoPage),
       },
       {
+        path: 'ranking',
+        data: { editarMetas: true },
+        loadComponent: () => import('../shared/ranking/ranking.page').then((m) => m.RankingPage),
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('../shared/perfil/mi-perfil.page').then((m) => m.MiPerfilPage),
+      },
+      {
         path: 'cuadres',
         loadComponent: () => import('./cuadres/cuadres.page').then((m) => m.AdminCuadresPage),
       },

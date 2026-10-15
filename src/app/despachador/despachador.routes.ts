@@ -55,6 +55,15 @@ export const DESPACHADOR_ROUTES: Routes = [
           import('../vendedor/nuevo-pedido/nuevo-pedido.page').then((m) => m.NuevoPedidoPage),
       },
       {
+        path: 'ranking',
+        data: { tipo: 'domiciliario' },
+        loadComponent: () => import('../shared/ranking/ranking.page').then((m) => m.RankingPage),
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('../shared/perfil/mi-perfil.page').then((m) => m.MiPerfilPage),
+      },
+      {
         path: 'cuadres',
         loadComponent: () =>
           import('../admin/cuadres/cuadres.page').then((m) => m.AdminCuadresPage),
