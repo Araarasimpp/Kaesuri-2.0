@@ -60,7 +60,7 @@ const DESCRIPCION_ROL: Record<UserRole, string> = {
         inset: 0;
         z-index: 1000;
         border: none;
-        background: rgba(10, 12, 16, 0.45);
+        background: rgba(14, 35, 41, 0.45);
       }
       .cr-hoja {
         position: fixed;

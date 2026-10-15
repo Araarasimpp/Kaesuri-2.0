@@ -1,57 +1,83 @@
 <div class="inicio-despachador">
   <header class="page-header">
     <h1>Inicio</h1>
-    <a routerLink="/despachador/pedidos/nuevo" class="btn-primary">+ Nuevo pedido</a>
+    <a routerLink="/despachador/pedidos/nuevo" class="btn-primary">
+      <ion-icon name="add" aria-hidden="true"></ion-icon>
+      Nuevo pedido
+    </a>
   </header>
 
-  <ng-container *ngIf="!loading; else cargando">
-    <section class="stats-grid">
-      <div class="stat-card destacada">
-        <span class="stat-label">Ventas de hoy</span>
-        <span class="stat-valor">{{ formatoMoneda(ventasHoy) }}</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">Pendientes</span>
-        <span class="stat-valor">{{ pedidosPendientes }}</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">En ruta</span>
-        <span class="stat-valor">{{ pedidosEnRuta }}</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">Entregados hoy</span>
-        <span class="stat-valor">{{ entregadosHoy }}</span>
-      </div>
-    </section>
+  @if (!loading) {
+    <div class="mosaico">
+      <section class="mod m-hoy" aria-labelledby="t-hoy">
+        <header class="mod-head">
+          <h2 class="mod-tab" id="t-hoy">Hoy</h2>
+        </header>
+        <div class="celdas">
+          <div class="celda celda-principal">
+            <span class="celda-label">Ventas de hoy</span>
+            <span class="celda-valor num">{{ formatoMoneda(ventasHoy) }}</span>
+          </div>
+          <a class="celda celda-link" routerLink="/despachador/pedidos">
+            <span class="celda-label"><app-estado-icon estado="pendiente" [size]="12"></app-estado-icon>Pendientes</span>
+            <span class="celda-valor num">{{ pedidosPendientes }}</span>
+          </a>
+          <a class="celda celda-link" routerLink="/despachador/pedidos">
+            <span class="celda-label"><app-estado-icon estado="en_ruta" [size]="12"></app-estado-icon>En ruta</span>
+            <span class="celda-valor num">{{ pedidosEnRuta }}</span>
+          </a>
+          <div class="celda">
+            <span class="celda-label"><app-estado-icon estado="entregado" [size]="12"></app-estado-icon>Entregados hoy</span>
+            <span class="celda-valor num">{{ entregadosHoy }}</span>
+          </div>
+        </div>
+      </section>
 
-    <section class="panel">
-      <div class="panel-header">
-        <h2>Cuadres por confirmar</h2>
-        <a routerLink="/despachador/cuadres" class="ver-todos">Ver todos</a>
-      </div>
-      <div class="reminder-item" *ngFor="let c of cuadresPendientes.slice(0, 5)">
-        <span>{{ nombreDomiciliario(c.domiciliario_id) }}</span>
-        <span class="reminder-monto">{{ formatoMoneda(c.total_a_entregar) }}</span>
-      </div>
-      <p class="empty-msg" *ngIf="!cuadresPendientes.length">No hay cuadres pendientes de confirmar.</p>
-    </section>
+      <section class="mod m-recientes" aria-labelledby="t-recientes">
+        <header class="mod-head">
+          <h2 class="mod-tab" id="t-recientes">Pedidos recientes</h2>
+          <span class="mod-meta num">{{ pedidosRecientes.length }}</span>
+          <div class="mod-acciones">
+            <a routerLink="/despachador/pedidos">Ver todos</a>
+          </div>
+        </header>
+        <ul class="filas">
+          @for (p of pedidosRecientes; track p.numero) {
+            <li [class.cancelado]="p.estado === 'cancelado'">
+              <app-estado-icon [estado]="p.estado"></app-estado-icon>
+              <span class="pedido-num num">#{{ p.numero }}</span>
+              <span class="pedido-cliente">{{ p.cliente_nombre }}</span>
+              <span class="pedido-estado">{{ etiquetaEstado(p.estado) }}</span>
+              <span class="pedido-total num">{{ formatoMoneda(p.total) }}</span>
+            </li>
+          } @empty {
+            <li class="vacio-inline">Todavía no hay pedidos.</li>
+          }
+        </ul>
+      </section>
 
-    <section class="panel">
-      <div class="panel-header">
-        <h2>Pedidos recientes</h2>
-        <a routerLink="/despachador/pedidos" class="ver-todos">Ver todos</a>
-      </div>
-      <div class="pedido-row" *ngFor="let p of pedidosRecientes">
-        <span class="pedido-num text-soft">#{{ p.numero }}</span>
-        <span class="pedido-cliente">{{ p.cliente_nombre }}</span>
-        <span class="badge" [ngClass]="claseEstado(p.estado)">{{ etiquetaEstado(p.estado) }}</span>
-        <span class="pedido-total">{{ formatoMoneda(p.total) }}</span>
-      </div>
-      <p class="empty-msg" *ngIf="!pedidosRecientes.length">Todavía no hay pedidos.</p>
-    </section>
-  </ng-container>
-
-  <ng-template #cargando>
+      <section class="mod m-cuadres" aria-labelledby="t-cuadres">
+        <header class="mod-head">
+          <h2 class="mod-tab" id="t-cuadres">Cuadres por confirmar</h2>
+          <span class="mod-meta num">{{ cuadresPendientes.length }}</span>
+          <div class="mod-acciones">
+            <a routerLink="/despachador/cuadres">Ver todos</a>
+          </div>
+        </header>
+        <ul class="filas">
+          @for (c of cuadresPendientes.slice(0, 5); track $index) {
+            <li>
+              <span class="ins ins-acento">Cuadre</span>
+              <span class="pedido-cliente">{{ nombreDomiciliario(c.domiciliario_id) }}</span>
+              <span class="pedido-total num">{{ formatoMoneda(c.total_a_entregar) }}</span>
+            </li>
+          } @empty {
+            <li class="vacio-inline">No hay cuadres pendientes de confirmar.</li>
+          }
+        </ul>
+      </section>
+    </div>
+  } @else {
     <app-esqueleto tipo="pagina" [cantidad]="5"></app-esqueleto>
-  </ng-template>
+  }
 </div>

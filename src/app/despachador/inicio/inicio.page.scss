@@ -1,6 +1,7 @@
 .inicio-despachador {
-  padding: 28px 32px 48px;
-  max-width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
   overflow-x: hidden;
 }
 
@@ -9,188 +10,119 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+  min-height: 52px;
 }
 
 .page-header h1 {
-  font-size: 26px;
-  font-weight: 700;
   margin: 0;
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .btn-primary {
-  padding: 10px 18px;
-  border-radius: 10px;
-  background: var(--k-ink);
-  color: var(--k-paper);
-  font-size: 13px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: var(--fs-sm);
+  font-weight: 800;
   text-decoration: none;
   white-space: nowrap;
+  transition: background var(--dur) var(--ease);
 }
 
-.stats-grid {
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-primary ion-icon {
+  font-size: 17px;
+}
+
+// ---------- Mosaico ----------
+.mosaico {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.stat-card {
-  border: 1px solid var(--k-border);
-  border-radius: 14px;
-  padding: 16px 18px;
-  background: var(--k-card-bg);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.stat-card.destacada {
-  background: var(--k-ink);
-  border-color: var(--k-ink);
-}
-
-.stat-label {
-  font-size: 13px;
-  color: var(--k-text-soft);
-}
-
-.stat-card.destacada .stat-label {
-  color: rgba(247, 247, 245, 0.6);
-}
-
-.stat-valor {
-  font-size: 22px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.stat-card.destacada .stat-valor {
-  color: var(--k-amber);
-}
-
-.panel {
-  background: var(--k-card-bg);
-  border: 1px solid var(--k-border);
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
-  min-width: 0;
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.panel-header h2 {
-  font-size: 15px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.ver-todos {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--k-amber);
-  text-decoration: none;
-}
-
-.reminder-item {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 13px;
-  background: var(--k-bg-alt);
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-}
-
-.reminder-monto {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.pedido-row {
-  display: flex;
-  align-items: center;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--k-border);
-  font-size: 13px;
-  min-width: 0;
+  align-items: start;
 }
 
-.pedido-row:last-child {
-  border-bottom: none;
+.m-hoy {
+  grid-column: span 12;
+}
+
+.m-recientes {
+  grid-column: span 8;
+}
+
+.m-cuadres {
+  grid-column: span 4;
+}
+
+.pedido-num {
+  min-width: 46px;
+  font-weight: 800;
 }
 
 .pedido-cliente {
   flex: 1;
   min-width: 0;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.pedido-estado {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
 .pedido-total {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  min-width: 80px;
+  text-align: right;
+  font-weight: 800;
 }
 
-.badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 999px;
-  white-space: nowrap;
+// Lo cancelado se tacha, no se esconde
+li.cancelado .pedido-num,
+li.cancelado .pedido-cliente,
+li.cancelado .pedido-total {
+  color: var(--text-muted);
 }
 
-.badge-ok {
-  background: rgba(47, 143, 130, 0.12);
-  color: var(--k-teal);
+li.cancelado .pedido-total {
+  text-decoration: line-through;
 }
 
-.badge-bajo {
-  background: rgba(232, 163, 61, 0.15);
-  color: var(--k-amber);
-}
-
-.badge-info {
-  background: rgba(18, 21, 28, 0.08);
-  color: var(--k-text-soft);
-}
-
-.badge-coral {
-  background: rgba(214, 95, 95, 0.12);
-  color: var(--k-coral);
-}
-
-.empty-msg {
-  color: var(--k-text-soft);
-  font-size: 13px;
+.mod-acciones a {
   padding: 8px 0;
+  margin: -8px 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
+  .m-recientes,
+  .m-cuadres {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 720px) {
   .inicio-despachador {
-    padding: 18px 14px 40px;
+    padding: 0 10px 24px;
   }
 
-  .stats-grid {
-    grid-template-columns: 1fr 1fr;
+  .page-header .btn-primary {
+    display: none; // en celular "Nuevo" está en la barra inferior
   }
-}
-// Área de toque más grande en el celular sin mover el diseño
-.ver-todos {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  margin-top: -8px;
-  margin-bottom: -8px;
+
+  .pedido-estado {
+    display: none;
+  }
 }

@@ -88,7 +88,7 @@
 .reg-tipo[data-accion='entregar'],
 .reg-tipo[data-accion='confirmar'] {
   background: color-mix(in srgb, var(--st-entregado) 12%, transparent);
-  color: var(--st-entregado);
+  color: var(--st-entregado-text);
 }
 
 @media (max-width: 720px) {

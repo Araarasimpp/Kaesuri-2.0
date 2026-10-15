@@ -71,7 +71,7 @@ const SALIDA = 384; // px de la foto final (se ve nítida en pantallas retina)
   `,
   styles: [
     `
-      .fe-fondo { position: fixed; inset: 0; z-index: 200; background: rgba(10, 12, 16, 0.55); animation: aparecer 200ms ease-out; }
+      .fe-fondo { position: fixed; inset: 0; z-index: 200; background: rgba(14, 35, 41, 0.55); animation: aparecer 200ms ease-out; }
       .fe-hoja {
         position: fixed; z-index: 201; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 440px;
         padding: 10px 20px calc(20px + env(safe-area-inset-bottom));
@@ -103,7 +103,7 @@ const SALIDA = 384; // px de la foto final (se ve nítida en pantallas retina)
       /* Todo lo que queda por fuera del círculo se oscurece */
       .fe-mascara {
         position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-        box-shadow: 0 0 0 999px rgba(10, 12, 16, 0.62), inset 0 0 0 2px rgba(255, 255, 255, 0.85);
+        box-shadow: 0 0 0 999px rgba(14, 35, 41, 0.62), inset 0 0 0 2px rgba(255, 255, 255, 0.85);
       }
       .fe-zoom { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 300px; color: var(--text-soft); font-size: 20px; }
       .fe-zoom input { flex: 1; accent-color: var(--accent); height: 28px; }

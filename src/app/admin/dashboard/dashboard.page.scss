@@ -1,36 +1,41 @@
 :host {
   display: block;
   min-height: 100%;
-  background: var(--surface);
 }
 
-// ---------- Encabezado ----------
+.dash {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+
+// ---------- Franja de título ----------
 .page-header {
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: 52px;
-  padding: 0 20px;
-  border-bottom: 1px solid var(--border-soft);
 }
 
 .title {
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  gap: 10px;
   margin-right: auto;
   min-width: 0;
 }
 
 .title h1 {
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  font-size: 13px;
-  color: var(--text-soft);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -41,20 +46,24 @@
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 6px;
   height: 32px;
   padding: 0 12px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
-  font-size: 13px;
-  font-weight: 500;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
 
 .btn:hover {
-  border-color: var(--text-muted);
+  border-color: var(--accent);
 }
 
 .btn-primary {
@@ -64,179 +73,96 @@
 }
 
 .btn-primary:hover {
-  border-color: var(--accent-hover);
   background: var(--accent-hover);
 }
 
 .btn-sm {
-  height: 28px;
-  padding: 0 10px;
-  font-size: 12px;
+  height: 26px;
+  padding: 0 8px;
+  font-size: var(--fs-xs);
 }
 
-// ---------- Contenido ----------
-.content {
+// ---------- Mosaico ----------
+.mosaico {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+.m-hoy {
+  grid-column: span 12;
+}
+
+// Dos columnas que se llenan por su cuenta, sin huecos entre módulos
+.col {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  max-width: 1200px;
-  padding: 24px 28px 48px;
+  gap: 10px;
+  min-width: 0;
 }
 
-h2 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
+.col-a {
+  grid-column: span 8;
 }
 
-.section-head {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 10px;
+.col-b {
+  grid-column: span 4;
 }
 
-.count {
-  font-size: 13px;
+.mod-body {
+  padding: 10px 12px;
+}
+
+.mod-foot {
+  margin: 6px 0 0;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 
-.ver-todos {
-  margin-left: auto;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--accent);
-  text-decoration: none;
+.mod-meta strong {
+  color: var(--text);
+  font-weight: 800;
 }
 
-// ---------- KPIs ----------
-.kpis {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+.mod-acciones .segmented {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
-.kpi {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 14px 16px;
+.mod-acciones .segmented button {
+  height: 22px;
+  padding: 0 8px;
+  border: none;
+  background: none;
+  color: var(--text-soft);
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mod-acciones .segmented button + button {
+  border-left: 1px solid var(--border);
+}
+
+.mod-acciones .segmented button:hover {
+  background: var(--hover);
   color: var(--text);
   text-decoration: none;
 }
 
-.kpi + .kpi {
-  border-left: 1px solid var(--border);
+.mod-acciones .segmented button.on {
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
-.kpi-link:hover {
-  background: var(--surface-2);
-}
-
-.kpi-label {
-  font-size: 12px;
-  color: var(--text-soft);
-}
-
-.kpi-valor {
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.kpi-nota {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-// ---------- Panel de ventas ----------
-.panel {
-  padding: 18px 18px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.panel-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.panel-sub {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--text-soft);
-}
-
-.panel-sub strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.variacion {
-  margin-left: 6px;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: var(--surface-2);
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.variacion.sube {
-  color: var(--st-entregado);
-  background: color-mix(in srgb, var(--st-entregado) 10%, transparent);
-}
-
-.variacion.baja {
-  color: var(--danger);
-  background: var(--danger-wash);
-}
-
-.controles {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.segmented {
-  display: inline-flex;
-  padding: 2px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--surface-2);
-}
-
-.segmented button {
-  height: 26px;
-  padding: 0 10px;
-  border: none;
-  border-radius: 4px;
-  background: none;
-  color: var(--text-soft);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.segmented button:hover {
-  color: var(--text);
-}
-
-.segmented button.on {
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: 0 1px 2px rgba(22, 24, 29, 0.08), 0 0 0 1px var(--border);
-}
-
+// ---------- Gráfica ----------
 .chart-ventas {
   position: relative;
-  height: 240px;
+  height: 220px;
   transition: opacity var(--dur) var(--ease);
 }
 
@@ -244,132 +170,17 @@ h2 {
   opacity: 0.45;
 }
 
-.panel-foot {
-  margin: 10px 0 0;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-// ---------- Columnas ----------
-.cols {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 28px;
-  align-items: start;
-}
-
-.col-side {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  min-width: 0;
-}
-
-// Necesita atención
-.lista {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.tarea {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 54px;
-  padding: 8px 14px;
-  border-bottom: 1px solid var(--border-soft);
-}
-
-.tarea:last-child {
-  border-bottom: none;
-}
-
-.tarea:hover {
-  background: var(--surface-2);
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  border-radius: 50%;
-}
-
-.dot-cuadre {
-  background: var(--accent);
-}
-
-.dot-asignar {
-  background: var(--st-ruta);
-}
-
-.dot-stock {
-  background: var(--danger);
-}
-
-.tarea-texto {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-}
-
-.tarea-titulo {
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tarea-detalle {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.tarea-monto {
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.vacio {
-  padding: 24px 16px;
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius);
-  text-align: center;
-  font-size: 13px;
-  color: var(--text-soft);
-}
-
-.vacio p {
-  margin: 0;
-}
-
-.vacio-titulo {
-  margin-bottom: 4px !important;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.vacio-inline {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-// Estados de hoy
+// ---------- Estados ----------
 .estados {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
 }
 
 .donut {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 104px;
+  height: 104px;
   flex-shrink: 0;
 }
 
@@ -377,20 +188,14 @@ h2 {
   position: absolute;
   inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   pointer-events: none;
 }
 
 .donut-centro span {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.donut-centro small {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: var(--fs-lg);
+  font-weight: 800;
 }
 
 .leyenda {
@@ -400,70 +205,135 @@ h2 {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 13px;
+  font-size: var(--fs-sm);
 }
 
 .leyenda li {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 26px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.leyenda li:last-child {
+  border-bottom: none;
 }
 
 .leyenda-nombre {
   flex: 1;
   color: var(--text-2);
+  font-weight: 600;
 }
 
-// En ruta y recientes
-.dom,
-.reciente {
+.leyenda .num {
+  font-weight: 800;
+}
+
+// ---------- Filas ----------
+.tarea {
+  min-height: 44px !important;
+}
+
+.tarea-tipo {
+  min-width: 52px;
+  justify-content: center;
+}
+
+.tarea-texto {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 42px;
-  border-bottom: 1px solid var(--border-soft);
-  font-size: 13px;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.tarea-titulo {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tarea-detalle {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.tarea-monto {
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .dom-nombre,
 .reciente-cliente {
   flex: 1;
   min-width: 0;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.dom-nombre {
-  font-weight: 500;
-}
-
-.dom-pedidos,
 .reciente-num {
-  font-size: 12px;
-  color: var(--text-muted);
-  white-space: nowrap;
+  min-width: 44px;
+  font-weight: 800;
 }
 
 .dom-valor,
 .reciente-total {
-  min-width: 84px;
+  min-width: 76px;
   text-align: right;
-  font-weight: 500;
+  font-weight: 800;
+}
+
+// Lo cancelado se tacha, no se esconde
+.reciente.cancelado .reciente-num,
+.reciente.cancelado .reciente-cliente,
+.reciente.cancelado .reciente-total {
+  color: var(--text-muted);
+}
+
+.reciente.cancelado .reciente-total {
+  text-decoration: line-through;
+}
+
+.vacio {
+  padding: 18px 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--text-soft);
+}
+
+.vacio p {
+  margin: 0;
+}
+
+.vacio-titulo {
+  margin-bottom: 2px !important;
+  font-weight: 800;
+  color: var(--text);
+}
+
+// Área de toque más grande en el celular sin mover el diseño
+.mod-acciones a {
+  padding: 8px 0;
+  margin: -8px 0;
 }
 
 // ---------- Carga ----------
 .sk {
   display: block;
-  border-radius: 4px;
+  border-radius: 3px;
   background: var(--surface-2);
   animation: pulso 1.2s ease-in-out infinite;
 }
 
-.sk-a { width: 60%; height: 10px; }
-.sk-b { width: 40%; height: 18px; margin-top: 6px; }
-.sk-chart { height: 240px; }
+.sk-a { width: 60%; height: 9px; }
+.sk-b { width: 45%; height: 20px; margin-top: 6px; }
+.sk-chart { height: 220px; }
 
 @keyframes pulso {
   50% {
@@ -472,89 +342,79 @@ h2 {
 }
 
 // ---------- Responsivo ----------
-@media (max-width: 1100px) {
-  .cols {
-    grid-template-columns: minmax(0, 1fr);
+@media (max-width: 1180px) {
+  .col-a {
+    grid-column: span 7;
+  }
+
+  .col-b {
+    grid-column: span 5;
   }
 }
 
 @media (max-width: 720px) {
+  .dash {
+    padding: 0 10px 24px;
+  }
+
   .page-header {
-    padding: 12px 16px;
-    flex-wrap: wrap;
+    min-height: 56px;
   }
 
   .title {
     flex-direction: column;
-    gap: 2px;
-    width: 100%;
-  }
-
-  .title h1 {
-    font-size: 20px;
+    gap: 0;
   }
 
   .page-header .btn {
-    flex: 1;
-    justify-content: center;
-    height: 40px;
+    display: none; // en celular "Pedidos" y "Nuevo" están en la barra inferior
   }
 
-  .content {
-    padding: 16px 16px 32px;
-    gap: 24px;
+  .mosaico {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
 
-  .kpis {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .mosaico > .mod,
+  .mosaico > .col {
+    grid-column: auto;
   }
 
-  .kpi:nth-child(3) {
-    border-left: none;
+  .m-ventas .mod-head {
+    flex-wrap: wrap;
+    padding-bottom: 6px;
   }
 
-  .kpi:nth-child(n + 3) {
-    border-top: 1px solid var(--border);
-  }
-
-  .kpi-valor {
-    font-size: 18px;
-  }
-
-  .panel {
-    padding: 14px 12px 12px;
-  }
-
-  .controles {
+  .m-ventas .mod-acciones {
     width: 100%;
+    margin-left: 10px;
   }
 
-  .segmented {
+  .mod-acciones .segmented {
     flex: 1;
   }
 
-  .segmented button {
+  .mod-acciones .segmented button {
     flex: 1;
     height: 32px;
+    padding: 0 6px;
+    font-size: var(--fs-sm);
+    white-space: nowrap;
   }
 
   .chart-ventas {
-    height: 200px;
+    height: 190px;
   }
 
   .tarea {
     flex-wrap: wrap;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
   }
 
-  .tarea-monto {
-    margin-left: 20px;
+  .btn-sm {
+    height: 34px;
+    padding: 0 12px;
+    font-size: var(--fs-sm);
   }
-}
-
-// Área de toque más grande en el celular sin mover el diseño
-.ver-todos {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  margin-top: -8px;
-  margin-bottom: -8px;
 }

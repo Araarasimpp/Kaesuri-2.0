@@ -2,7 +2,12 @@
   <aside class="sidebar">
     <div class="brand">
       <img class="brand-mark" src="assets/icon/logo.png" alt="" />
-      <span class="brand-name" *ngIf="!collapsed">Home ALS</span>
+      @if (!collapsed) {
+        <span class="brand-text">
+          <span class="brand-name">Home ALS</span>
+          <span class="brand-rol">Administración</span>
+        </span>
+      }
       <button
         class="icon-btn"
         (click)="toggleCollapse()"
@@ -14,42 +19,62 @@
 
     <a routerLink="/admin/pedidos/nuevo" class="new-btn" [attr.aria-label]="collapsed ? 'Nuevo pedido' : null">
       <ion-icon name="add"></ion-icon>
-      <span *ngIf="!collapsed">Nuevo pedido</span>
+      @if (!collapsed) {
+        <span>Nuevo pedido</span>
+      }
     </a>
 
     <nav class="menu" aria-label="Secciones">
-      <a
-        *ngFor="let item of menuItems"
-        [routerLink]="item.path"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: item.path === '/admin' }"
-        class="menu-item"
-        [attr.aria-label]="collapsed ? item.label : null"
-      >
-        <ion-icon [name]="item.icon"></ion-icon>
-        <span *ngIf="!collapsed">{{ item.label }}</span>
-      </a>
+      @for (item of menuItems; track item.path; let i = $index) {
+        @if (item.grupo && (i === 0 || menuItems[i - 1].grupo !== item.grupo)) {
+          <span class="menu-grupo" aria-hidden="true">{{ item.grupo }}</span>
+        }
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.path === '/admin' }"
+          class="menu-item"
+          [attr.aria-label]="collapsed ? item.label : null"
+        >
+          <ion-icon [name]="item.icon"></ion-icon>
+          @if (!collapsed) {
+            <span>{{ item.label }}</span>
+          }
+        </a>
+      }
     </nav>
 
     <div class="sidebar-footer">
-      <button class="footer-btn" (click)="toggleAvisos()" [class.active]="avisos.abierto()" [attr.aria-expanded]="avisos.abierto()">
+      <button class="footer-btn" (click)="toggleAvisos()" [class.active]="avisos.abierto()" [attr.aria-expanded]="avisos.abierto()" [attr.aria-label]="collapsed ? 'Avisos' : null">
         <span class="icono-badge">
           <ion-icon name="notifications-outline"></ion-icon>
-          <span class="badge-num num" *ngIf="avisos.noLeidas()">{{ avisos.noLeidas() > 9 ? '9+' : avisos.noLeidas() }}</span>
+          @if (avisos.noLeidas()) {
+            <span class="badge-num num">{{ avisos.noLeidas() > 9 ? '9+' : avisos.noLeidas() }}</span>
+          }
         </span>
-        <span *ngIf="!collapsed">Avisos</span>
+        @if (!collapsed) {
+          <span>Avisos</span>
+        }
       </button>
-      <button class="footer-btn" *ngIf="cr.disponible" (click)="cr.abrir()" [attr.aria-label]="collapsed ? 'Cambiar rol' : null">
-        <ion-icon name="swap-horizontal-outline"></ion-icon>
-        <span *ngIf="!collapsed">Cambiar rol</span>
-      </button>
-      <button class="footer-btn" (click)="toggleTheme()">
+      @if (cr.disponible) {
+        <button class="footer-btn" (click)="cr.abrir()" [attr.aria-label]="collapsed ? 'Cambiar rol' : null">
+          <ion-icon name="swap-horizontal-outline"></ion-icon>
+          @if (!collapsed) {
+            <span>Cambiar rol</span>
+          }
+        </button>
+      }
+      <button class="footer-btn" (click)="toggleTheme()" [attr.aria-label]="collapsed ? (theme.isDark() ? 'Modo claro' : 'Modo oscuro') : null">
         <ion-icon [name]="theme.isDark() ? 'sunny-outline' : 'moon-outline'"></ion-icon>
-        <span *ngIf="!collapsed">{{ theme.isDark() ? 'Modo claro' : 'Modo oscuro' }}</span>
+        @if (!collapsed) {
+          <span>{{ theme.isDark() ? 'Modo claro' : 'Modo oscuro' }}</span>
+        }
       </button>
-      <button class="footer-btn" (click)="logout()">
+      <button class="footer-btn" (click)="logout()" [attr.aria-label]="collapsed ? 'Cerrar sesión' : null">
         <ion-icon name="log-out-outline"></ion-icon>
-        <span *ngIf="!collapsed">Cerrar sesión</span>
+        @if (!collapsed) {
+          <span>Cerrar sesión</span>
+        }
       </button>
     </div>
   </aside>
@@ -69,7 +94,7 @@
       <span class="tab-label">Pedidos</span>
     </a>
     <div class="pill-center">
-      <a routerLink="/admin/pedidos/nuevo" class="pill-action" (click)="masAbierto = false; avisos.cerrar()">
+      <a routerLink="/admin/pedidos/nuevo" routerLinkActive="active" class="pill-action" (click)="masAbierto = false; avisos.cerrar()">
         <ion-icon name="add"></ion-icon>
         <span class="tab-label">Nuevo</span>
       </a>
@@ -77,7 +102,9 @@
     <button class="tab" [class.active]="avisos.abierto()" (click)="toggleAvisos()" [attr.aria-expanded]="avisos.abierto()">
       <span class="icono-badge">
         <ion-icon name="notifications-outline"></ion-icon>
-        <span class="badge-num num" *ngIf="avisos.noLeidas()">{{ avisos.noLeidas() > 9 ? '9+' : avisos.noLeidas() }}</span>
+        @if (avisos.noLeidas()) {
+          <span class="badge-num num">{{ avisos.noLeidas() > 9 ? '9+' : avisos.noLeidas() }}</span>
+        }
       </span>
       <span class="tab-label">Avisos</span>
     </button>
@@ -87,16 +114,20 @@
     </button>
   </nav>
 
-  <ng-container *ngIf="masAbierto">
+  @if (masAbierto) {
     <button class="more-backdrop" aria-label="Cerrar menú" (click)="masAbierto = false"></button>
     <div class="more-sheet">
-      <a *ngFor="let item of menuMas" [routerLink]="item.path" routerLinkActive="active" (click)="masAbierto = false">
-        <ion-icon [name]="item.icon"></ion-icon>{{ item.label }}
-      </a>
+      @for (item of menuMas; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="active" (click)="masAbierto = false">
+          <ion-icon [name]="item.icon"></ion-icon>{{ item.label }}
+        </a>
+      }
       <hr />
-      <button *ngIf="cr.disponible" (click)="masAbierto = false; cr.abrir()">
-        <ion-icon name="swap-horizontal-outline"></ion-icon>Cambiar rol ({{ cr.etiquetaActual }})
-      </button>
+      @if (cr.disponible) {
+        <button (click)="masAbierto = false; cr.abrir()">
+          <ion-icon name="swap-horizontal-outline"></ion-icon>Cambiar rol ({{ cr.etiquetaActual }})
+        </button>
+      }
       <button (click)="toggleTheme()">
         <ion-icon [name]="theme.isDark() ? 'sunny-outline' : 'moon-outline'"></ion-icon>
         {{ theme.isDark() ? 'Modo claro' : 'Modo oscuro' }}
@@ -105,7 +136,7 @@
         <ion-icon name="log-out-outline"></ion-icon>Cerrar sesión
       </button>
     </div>
-  </ng-container>
+  }
 
   <app-avisos-panel posicion="sidebar"></app-avisos-panel>
   <app-aviso-inactividad></app-aviso-inactividad>

@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T04:37:13.860851+00:00",
+  "title": "Design System: Home ALS",
+  "extensions": {
+    "colorMeta": {
+      "petroleo": {
+        "role": "primary",
+        "displayName": "Petróleo",
+        "canonical": "#0f5c6e",
+        "tonalRamp": [
+          "#071216",
+          "#0b3440",
+          "#0b4a59",
+          "#0f5c6e",
+          "#4fb3c8",
+          "#8fcfdc",
+          "#cfe5ea",
+          "#eaf4f6"
+        ]
+      },
+      "menta": {
+        "role": "secondary",
+        "displayName": "Menta",
+        "canonical": "#3ccb9e",
+        "tonalRamp": [
+          "#123329",
+          "#0d5a42",
+          "#137556",
+          "#3ccb9e",
+          "#6fdab8",
+          "#a6e9d2",
+          "#cdf3e5",
+          "#e2f6ef"
+        ]
+      },
+      "coral": {
+        "role": "tertiary",
+        "displayName": "Coral",
+        "canonical": "#f27b63",
+        "tonalRamp": [
+          "#3a1e1a",
+          "#7a2e20",
+          "#c24a33",
+          "#f27b63",
+          "#f58b75",
+          "#f8b2a3",
+          "#fbd5cc",
+          "#fdece8"
+        ]
+      },
+      "tinta-petroleo": {
+        "role": "neutral",
+        "displayName": "Tinta petróleo",
+        "canonical": "#0e2329",
+        "tonalRamp": [
+          "#0a1a1f",
+          "#0e2329",
+          "#29434a",
+          "#4e6b73",
+          "#5b7880",
+          "#c3d3d6",
+          "#d9e4e6",
+          "#f3f7f7"
+        ]
+      }
+    },
+    "shadows": [
+      {
+        "name": "pop",
+        "value": "0 10px 28px rgba(14,35,41,.18), 0 2px 6px rgba(14,35,41,.08)",
+        "purpose": "Avisos, hoja Más y menús."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Toda transición."
+      },
+      {
+        "name": "dur",
+        "value": "140ms",
+        "purpose": "Hover y color."
+      },
+      {
+        "name": "destello",
+        "value": "900ms fondo menta → transparente",
+        "purpose": "Cifra que cambia en vivo."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "720px"
+      },
+      {
+        "name": "tabbar",
+        "value": "860px"
+      },
+      {
+        "name": "columns",
+        "value": "1180px"
+      }
+    ],
+    "components": [
+      {
+        "name": "module",
+        "html": "<section class=\"mod\"><header class=\"mod-head\"><h2 class=\"mod-tab\">Pedidos</h2><span class=\"mod-meta\">10</span></header><ul class=\"filas\"><li>#1043 Ana Rojas $52.000</li></ul></section>",
+        "css": ".mod{border:1px solid #d9e4e6;border-radius:6px;background:#fff;font:13px Manrope,sans-serif;color:#0e2329}.mod-head{display:flex;gap:10px;min-height:30px;border-bottom:1px solid #d9e4e6}.mod-tab{margin:-1px 0 -1px -1px;padding:0 10px;display:inline-flex;align-items:center;border-radius:6px 0 0 0;background:#0f5c6e;color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.mod-meta{display:flex;align-items:center;color:#5b7880;font-size:11.5px;font-weight:600}.filas{margin:0;padding:0;list-style:none}.filas li{min-height:36px;display:flex;align-items:center;padding:4px 12px}"
+      },
+      {
+        "name": "badge",
+        "html": "<span class=\"ins ins-ok\">Ganancia</span>",
+        "css": ".ins{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:3px;font:800 10.5px Manrope,sans-serif}.ins-ok{background:#e2f6ef;color:#137556}"
+      },
+      {
+        "name": "button-primary",
+        "html": "<button class=\"btn btn-primary\">Nuevo pedido</button>",
+        "css": ".btn{height:34px;padding:0 12px;border-radius:4px;font:700 13px Manrope,sans-serif;border:1px solid #0f5c6e}.btn-primary{background:#0f5c6e;color:#fff}"
+      }
+    ],
+    "narrative": {
+      "northStar": "El mosaico",
+      "rules": [
+        {
+          "section": "Colors",
+          "text": "The Pestaña Rule. Todo módulo se nombra con su pestaña petróleo, nunca con una etiqueta suelta encima de un título."
+        },
+        {
+          "section": "Colors",
+          "text": "The Ámbar Rule. El ámbar significa \"en ruta\" o \"bajo\". Ningún otro aviso lo usa."
+        }
+      ]
+    }
+  }
+}

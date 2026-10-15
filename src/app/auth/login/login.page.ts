@@ -9,11 +9,12 @@ import {
   msBloqueado,
   registrarFallo,
 } from '../../shared/seguridad/intentos-login';
+import { AuthMarcaComponent } from '../marca/auth-marca.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, AuthMarcaComponent],
   templateUrl: './login.page.html',
   styleUrls: ['../auth-shell.scss', './login.page.scss'],
 })

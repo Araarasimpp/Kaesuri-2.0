@@ -213,7 +213,7 @@
   align-items: center;
   justify-content: center;
   padding: calc(24px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
-  background: rgba(10, 12, 16, 0.78);
+  background: rgba(14, 35, 41, 0.78);
 }
 
 .visor-foto figure {
@@ -470,7 +470,7 @@
 }
 
 .item-nota span {
-  color: var(--st-entregado);
+  color: var(--st-entregado-text);
 }
 
 .sin-costo {
@@ -671,7 +671,7 @@ input[aria-invalid='true'] {
 }
 
 .totales .comision dd {
-  color: var(--st-entregado);
+  color: var(--st-entregado-text);
   font-weight: 500;
 }
 
@@ -751,8 +751,12 @@ input[aria-invalid='true'] {
 @media (max-width: 900px) {
   .np-grid {
     grid-template-columns: minmax(0, 1fr);
-    padding: 14px;
-    gap: 16px;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .np-pedido {
+    gap: 12px;
   }
 
   .np-productos {
@@ -791,7 +795,7 @@ input[aria-invalid='true'] {
     padding: 10px 14px 10px;
     border-top: 1px solid var(--border);
     background: var(--surface);
-    box-shadow: 0 -4px 16px rgba(22, 24, 29, 0.06);
+    box-shadow: 0 -4px 16px rgba(14, 35, 41, 0.06);
   }
 
   .barra-error {
@@ -905,14 +909,13 @@ input[aria-invalid='true'] {
 .error-campo {
   margin: 8px 0 0;
   font-size: 13px;
-  color: var(--danger, #c4321c);
+  color: var(--danger);
 }
 
 .aviso-edicion {
   margin: 0 0 16px;
   padding: 10px 14px;
   border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
   border-radius: var(--radius);
   background: var(--accent-wash);
   font-size: 13px;
@@ -1006,7 +1009,7 @@ input[aria-invalid='true'] {
   bottom: 8px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(15, 16, 19, 0.7);
+  background: rgba(14, 35, 41, 0.7);
   color: #ffffff;
   font-size: 12px;
   font-weight: 500;
@@ -1018,4 +1021,75 @@ input[aria-invalid='true'] {
   height: 1px;
   opacity: 0;
   pointer-events: none;
+}
+
+
+// ---------- Mosaico: cada bloque es un módulo con su pestaña ----------
+.np-productos,
+.bloque {
+  position: relative;
+  gap: 10px;
+  padding: 38px 10px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.np-productos::before,
+.bloque::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--surface-2);
+}
+
+.np-productos > h2,
+.bloque > h2,
+.bloque-head h2 {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  z-index: 1;
+  margin: 0;
+  padding: 0 10px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius) 0 0 0;
+  background: var(--tab-bg);
+  color: var(--tab-text);
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.bloque-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 10px;
+  z-index: 1;
+  height: 28px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.catalogo {
+  border-radius: var(--radius-sm);
+}
+
+.producto-foto {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+}
+
+.producto-accion {
+  min-height: 46px;
 }

@@ -11,7 +11,7 @@
           placeholder="Buscar por nombre o SKU..."
         />
       </div>
-      <button class="btn-primary" (click)="abrirNuevo()">+ Nuevo producto</button>
+      <button class="btn-primary" (click)="abrirNuevo()"><ion-icon name="add" aria-hidden="true"></ion-icon>Nuevo producto</button>
       <label class="btn-secondary btn-excel">
         {{ cargandoExcel ? 'Cargando...' : 'Cargar Excel' }}
         <input
@@ -43,6 +43,12 @@
   </div>
 
   <div class="table-card">
+    <header class="mod-head">
+      <h2 class="mod-tab">Productos</h2>
+      @if (!loading) {
+        <span class="mod-meta num">{{ filtrados.length }}</span>
+      }
+    </header>
     <ng-container *ngIf="!loading; else cargando">
       <table *ngIf="filtrados.length; else vacio">
         <thead>
