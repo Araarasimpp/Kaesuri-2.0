@@ -1,7 +1,7 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(18, 21, 28, 0.5);
+  background: rgba(14, 35, 41, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,7 +17,7 @@
   flex-direction: column;
   overflow: hidden;
   background: var(--k-card-bg);
-  border-radius: 16px;
+  border-radius: var(--radius);
 }
 
 .modal-header {
@@ -59,7 +59,7 @@
 .imagen-preview {
   width: 96px;
   height: 96px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
   display: flex;
@@ -161,8 +161,8 @@
 }
 
 .btn-primary {
-  background: var(--k-ink);
-  color: var(--k-paper);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .btn-primary:disabled {

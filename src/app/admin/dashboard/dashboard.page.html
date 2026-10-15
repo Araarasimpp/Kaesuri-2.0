@@ -8,172 +8,207 @@
     <a class="btn btn-primary" routerLink="/admin/pedidos/nuevo">Nuevo pedido</a>
   </header>
 
-  <ng-container *ngIf="!loading; else cargando">
-    <div class="content">
-      <!-- Resumen del día -->
-      <div class="kpis" role="list">
-        <div class="kpi" role="listitem">
-          <span class="kpi-label">Ventas de hoy</span>
-          <span class="kpi-valor num">{{ formatoMoneda(ventasHoy) }}</span>
-          <span class="kpi-nota num">Ganancia {{ formatoMoneda(gananciaHoy) }}</span>
-        </div>
-        <div class="kpi" role="listitem">
-          <span class="kpi-label">Pedidos de hoy</span>
-          <span class="kpi-valor num">{{ pedidosHoy }}</span>
-          <span class="kpi-nota num">{{ entregadosHoy }} {{ entregadosHoy === 1 ? 'entregado' : 'entregados' }}</span>
-        </div>
-        <div class="kpi" role="listitem">
-          <span class="kpi-label">En ruta</span>
-          <span class="kpi-valor num">{{ pedidosEnRuta }}</span>
-          <span class="kpi-nota num">
-            {{ domiciliarios.length }} {{ domiciliarios.length === 1 ? 'domiciliario' : 'domiciliarios' }}
-          </span>
-        </div>
-        <a class="kpi kpi-link" role="listitem" routerLink="/admin/cuadres" [queryParams]="{ fecha: 'todas' }">
-          <span class="kpi-label">Por recibir en cuadres</span>
-          <span class="kpi-valor num">{{ formatoMoneda(porCobrarCuadres) }}</span>
-          <span class="kpi-nota num">
-            {{ cuadresPendientes ? cuadresPendientes + ' sin confirmar' : 'Todo confirmado' }}
-          </span>
-        </a>
-      </div>
-
-      <!-- Ventas -->
-      <section class="panel" aria-labelledby="t-ventas">
-        <div class="panel-head">
-          <div>
-            <h2 id="t-ventas">Ventas</h2>
-            <p class="panel-sub num">
-              <strong>{{ metrica === 'ventas' ? formatoMoneda(totalPeriodo) : pedidosPeriodo + ' pedidos' }}</strong>
-              en {{ periodo === 90 ? 'los últimos 3 meses' : 'los últimos ' + periodo + ' días' }}
-              <span
-                class="variacion"
-                *ngIf="variacion !== null"
-                [class.sube]="variacion > 0"
-                [class.baja]="variacion < 0"
-                [title]="'Comparado con los ' + (periodo === 90 ? '3 meses' : periodo + ' días') + ' anteriores'"
-              >
-                {{ variacion > 0 ? '↑' : variacion < 0 ? '↓' : '' }} {{ variacion > 0 ? variacion : -variacion }}% vs. periodo anterior
-              </span>
-            </p>
+  @if (!loading) {
+    <div class="mosaico">
+      <!-- Hoy: cifras del día en una fila de celdas -->
+      <section class="mod m-hoy" aria-labelledby="t-hoy">
+        <header class="mod-head">
+          <h2 class="mod-tab" id="t-hoy">Hoy</h2>
+          <span class="mod-meta">Se actualiza en vivo</span>
+        </header>
+        <div class="celdas" role="list">
+          <div class="celda celda-principal" role="listitem">
+            <span class="celda-label">Ventas de hoy</span>
+            <span class="celda-valor num">{{ formatoMoneda(ventasHoy) }}</span>
+            <span class="celda-nota num"><span class="ins ins-ok">Ganancia</span> {{ formatoMoneda(gananciaHoy) }}</span>
           </div>
-          <div class="controles">
-            <div class="segmented" role="group" aria-label="Qué mostrar">
-              <button [class.on]="metrica === 'ventas'" [attr.aria-pressed]="metrica === 'ventas'" (click)="cambiarMetrica('ventas')">
-                Dinero
-              </button>
-              <button [class.on]="metrica === 'pedidos'" [attr.aria-pressed]="metrica === 'pedidos'" (click)="cambiarMetrica('pedidos')">
-                Pedidos
-              </button>
-            </div>
-            <div class="segmented" role="group" aria-label="Periodo">
-              <button
-                *ngFor="let p of periodos"
-                [class.on]="periodo === p.valor"
-                [attr.aria-pressed]="periodo === p.valor"
-                (click)="cambiarPeriodo(p.valor)"
-              >
-                {{ p.etiqueta }}
-              </button>
-            </div>
+          <div class="celda" role="listitem">
+            <span class="celda-label">Pedidos de hoy</span>
+            <span class="celda-valor num">{{ pedidosHoy }}</span>
+            <span class="celda-nota num">{{ entregadosHoy }} {{ entregadosHoy === 1 ? 'entregado' : 'entregados' }}</span>
           </div>
+          <div class="celda" role="listitem">
+            <span class="celda-label">En ruta</span>
+            <span class="celda-valor num">{{ pedidosEnRuta }}</span>
+            <span class="celda-nota num">
+              {{ domiciliarios.length }} {{ domiciliarios.length === 1 ? 'domiciliario' : 'domiciliarios' }}
+            </span>
+          </div>
+          <a class="celda celda-link" role="listitem" routerLink="/admin/cuadres" [queryParams]="{ fecha: 'todas' }">
+            <span class="celda-label">Por recibir en cuadres</span>
+            <span class="celda-valor num">{{ formatoMoneda(porCobrarCuadres) }}</span>
+            <span class="celda-nota num">
+              @if (cuadresPendientes) {
+                <span class="ins ins-alerta">{{ cuadresPendientes }} sin confirmar</span>
+              } @else {
+                Todo confirmado
+              }
+            </span>
+          </a>
         </div>
-        <div class="chart-ventas" [class.cargando]="cargandoGrafica">
-          <canvas #canvasVentas role="img" [attr.aria-label]="'Gráfica de ventas, ' + (periodo === 90 ? 'últimos 3 meses' : 'últimos ' + periodo + ' días')"></canvas>
-        </div>
-        <p class="panel-foot">Cuenta los pedidos en ruta y entregados. Pasa el cursor o toca una barra para ver el detalle.</p>
       </section>
 
-      <div class="cols">
-        <!-- Necesita atención -->
-        <section aria-labelledby="t-atencion">
-          <div class="section-head">
-            <h2 id="t-atencion">Necesita atención</h2>
-            <span class="num count">{{ tareas.length }}</span>
-          </div>
-          <div class="lista" *ngIf="tareas.length; else todoAlDia">
-            <div class="tarea" *ngFor="let t of tareas">
-              <span class="dot" [ngClass]="'dot-' + t.tipo" aria-hidden="true"></span>
-              <div class="tarea-texto">
-                <span class="tarea-titulo">{{ t.titulo }}</span>
-                <span class="tarea-detalle">{{ t.detalle }}</span>
+      <!-- Columna principal: ventas y lo que necesita atención -->
+      <div class="col col-a">
+        <!-- Ventas -->
+        <section class="mod m-ventas" aria-labelledby="t-ventas">
+          <header class="mod-head">
+            <h2 class="mod-tab" id="t-ventas">Ventas</h2>
+            <span class="mod-meta num">
+              <strong>{{ metrica === 'ventas' ? formatoMoneda(totalPeriodo) : pedidosPeriodo + ' pedidos' }}</strong>
+              {{ periodo === 90 ? '3 meses' : periodo + ' días' }}
+              @if (variacion !== null) {
+                <span
+                  class="ins"
+                  [class.ins-ok]="variacion > 0"
+                  [class.ins-alerta]="variacion < 0"
+                  [title]="'Comparado con los ' + (periodo === 90 ? '3 meses' : periodo + ' días') + ' anteriores'"
+                >
+                  {{ variacion > 0 ? '↑' : variacion < 0 ? '↓' : '' }} {{ variacion > 0 ? variacion : -variacion }}%
+                </span>
+              }
+            </span>
+            <div class="mod-acciones">
+              <div class="segmented" role="group" aria-label="Qué mostrar">
+                <button [class.on]="metrica === 'ventas'" [attr.aria-pressed]="metrica === 'ventas'" (click)="cambiarMetrica('ventas')">
+                  Dinero
+                </button>
+                <button [class.on]="metrica === 'pedidos'" [attr.aria-pressed]="metrica === 'pedidos'" (click)="cambiarMetrica('pedidos')">
+                  Pedidos
+                </button>
               </div>
-              <span class="num tarea-monto" *ngIf="t.monto !== null">{{ formatoMoneda(t.monto) }}</span>
-              <a class="btn btn-sm" [routerLink]="t.ruta" [queryParams]="t.query">{{ t.accion }}</a>
+              <div class="segmented" role="group" aria-label="Periodo">
+                @for (p of periodos; track p.valor) {
+                  <button [class.on]="periodo === p.valor" [attr.aria-pressed]="periodo === p.valor" (click)="cambiarPeriodo(p.valor)">
+                    {{ p.etiqueta }}
+                  </button>
+                }
+              </div>
             </div>
+          </header>
+          <div class="mod-body">
+            <div class="chart-ventas" [class.cargando]="cargandoGrafica">
+              <canvas #canvasVentas role="img" [attr.aria-label]="'Gráfica de ventas, ' + (periodo === 90 ? 'últimos 3 meses' : 'últimos ' + periodo + ' días')"></canvas>
+            </div>
+            <p class="mod-foot">Cuenta los pedidos en ruta y entregados. Pasa el cursor o toca una barra para ver el detalle.</p>
           </div>
-          <ng-template #todoAlDia>
-            <div class="vacio">
-              <p class="vacio-titulo">Todo al día</p>
-              <p>No hay cuadres por confirmar, pedidos sin domiciliario ni productos con stock bajo.</p>
-            </div>
-          </ng-template>
         </section>
 
-        <div class="col-side">
-          <!-- Estados de hoy -->
-          <section aria-labelledby="t-estados">
-            <div class="section-head">
-              <h2 id="t-estados">Pedidos de hoy</h2>
-            </div>
-            <div class="estados">
-              <div class="donut">
-                <canvas #canvasEstados role="img" aria-label="Pedidos de hoy por estado"></canvas>
-                <div class="donut-centro" aria-hidden="true">
-                  <span class="num">{{ pctEntregado }}%</span>
-                  <small>entregado</small>
-                </div>
+        <!-- Necesita atención -->
+        <section class="mod m-atencion" aria-labelledby="t-atencion">
+          <header class="mod-head">
+            <h2 class="mod-tab" id="t-atencion">Necesita atención</h2>
+            <span class="mod-meta num">{{ tareas.length }}</span>
+          </header>
+          @if (tareas.length) {
+            <ul class="filas">
+              @for (t of tareas; track $index) {
+                <li class="tarea">
+                  <span class="ins tarea-tipo" [class.ins-acento]="t.tipo === 'cuadre'" [class.ins-ruta]="t.tipo === 'asignar'" [class.ins-alerta]="t.tipo === 'stock'">
+                    {{ t.tipo === 'cuadre' ? 'Cuadre' : t.tipo === 'asignar' ? 'Asignar' : 'Stock' }}
+                  </span>
+                  <span class="tarea-texto">
+                    <span class="tarea-titulo">{{ t.titulo }}</span>
+                    <span class="tarea-detalle">{{ t.detalle }}</span>
+                  </span>
+                  @if (t.monto !== null) {
+                    <span class="num tarea-monto">{{ formatoMoneda(t.monto) }}</span>
+                  }
+                  <a class="btn btn-sm" [routerLink]="t.ruta" [queryParams]="t.query">{{ t.accion }}</a>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="mod-body">
+              <div class="vacio">
+                <p class="vacio-titulo">Todo al día</p>
+                <p>No hay cuadres por confirmar, pedidos sin domiciliario ni productos con stock bajo.</p>
               </div>
-              <ul class="leyenda">
-                <li *ngFor="let e of estadosHoy">
+            </div>
+          }
+        </section>
+      </div>
+
+      <!-- Columna lateral: estados, en ruta y últimos pedidos -->
+      <div class="col col-b">
+        <!-- Estados de hoy -->
+        <section class="mod m-estados" aria-labelledby="t-estados">
+          <header class="mod-head">
+            <h2 class="mod-tab" id="t-estados">Pedidos de hoy</h2>
+            <span class="mod-meta num">{{ pctEntregado }}% entregado</span>
+          </header>
+          <div class="mod-body estados">
+            <div class="donut">
+              <canvas #canvasEstados role="img" aria-label="Pedidos de hoy por estado"></canvas>
+              <div class="donut-centro" aria-hidden="true">
+                <span class="num">{{ pctEntregado }}%</span>
+              </div>
+            </div>
+            <ul class="leyenda">
+              @for (e of estadosHoy; track e.estado) {
+                <li>
                   <app-estado-icon [estado]="e.estado" [size]="12"></app-estado-icon>
                   <span class="leyenda-nombre">{{ e.etiqueta }}</span>
                   <span class="num">{{ e.cantidad }}</span>
                 </li>
-              </ul>
-            </div>
-          </section>
+              }
+            </ul>
+          </div>
+        </section>
 
-          <!-- En ruta -->
-          <section aria-labelledby="t-ruta">
-            <div class="section-head">
-              <h2 id="t-ruta">En ruta ahora</h2>
-              <span class="num count">{{ domiciliarios.length }}</span>
-            </div>
-            <div class="dom" *ngFor="let d of domiciliarios">
-              <app-avatar [nombre]="d.nombre" [url]="d.avatar_url" [size]="26"></app-avatar>
-              <span class="dom-nombre">{{ d.nombre }}</span>
-              <span class="dom-pedidos num">{{ d.cantidad }} {{ d.cantidad === 1 ? 'pedido' : 'pedidos' }}</span>
-              <span class="dom-valor num">{{ formatoMoneda(d.valor) }}</span>
-            </div>
-            <p class="vacio-inline" *ngIf="!domiciliarios.length">Nadie está en ruta en este momento.</p>
-          </section>
+        <!-- En ruta -->
+        <section class="mod m-ruta" aria-labelledby="t-ruta">
+          <header class="mod-head">
+            <h2 class="mod-tab" id="t-ruta">En ruta ahora</h2>
+            <span class="mod-meta num">{{ domiciliarios.length }}</span>
+          </header>
+          <ul class="filas">
+            @for (d of domiciliarios; track d.id) {
+              <li class="dom">
+                <app-avatar [nombre]="d.nombre" [url]="d.avatar_url" [size]="24"></app-avatar>
+                <span class="dom-nombre">{{ d.nombre }}</span>
+                <span class="ins ins-ruta num">{{ d.cantidad }}</span>
+                <span class="dom-valor num">{{ formatoMoneda(d.valor) }}</span>
+              </li>
+            } @empty {
+              <li class="vacio-inline">Nadie está en ruta en este momento.</li>
+            }
+          </ul>
+        </section>
 
-          <!-- Recientes -->
-          <section aria-labelledby="t-recientes">
-            <div class="section-head">
-              <h2 id="t-recientes">Últimos pedidos</h2>
-              <a class="ver-todos" routerLink="/admin/pedidos">Ver todos</a>
+        <!-- Recientes -->
+        <section class="mod m-recientes" aria-labelledby="t-recientes">
+          <header class="mod-head">
+            <h2 class="mod-tab" id="t-recientes">Últimos pedidos</h2>
+            <div class="mod-acciones">
+              <a routerLink="/admin/pedidos">Ver todos</a>
             </div>
-            <div class="reciente" *ngFor="let p of recientes">
-              <app-estado-icon [estado]="p.estado"></app-estado-icon>
-              <span class="num reciente-num">#{{ p.numero }}</span>
-              <span class="reciente-cliente">{{ p.cliente_nombre }}</span>
-              <span class="num reciente-total">{{ formatoMoneda(p.total) }}</span>
-            </div>
-            <p class="vacio-inline" *ngIf="!recientes.length">Todavía no hay pedidos.</p>
-          </section>
+          </header>
+          <ul class="filas">
+            @for (p of recientes; track p.id) {
+              <li class="reciente" [class.cancelado]="p.estado === 'cancelado'">
+                <app-estado-icon [estado]="p.estado"></app-estado-icon>
+                <span class="num reciente-num">#{{ p.numero }}</span>
+                <span class="reciente-cliente">{{ p.cliente_nombre }}</span>
+                <span class="num reciente-total">{{ formatoMoneda(p.total) }}</span>
+              </li>
+            } @empty {
+              <li class="vacio-inline">Todavía no hay pedidos.</li>
+            }
+          </ul>
+        </section>
+      </div>
+    </div>
+  } @else {
+    <div class="mosaico" aria-busy="true" aria-label="Cargando resumen">
+      <section class="mod m-hoy">
+        <div class="celdas">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <div class="celda"><span class="sk sk-a"></span><span class="sk sk-b"></span></div>
+          }
         </div>
-      </div>
+      </section>
+      <section class="mod m-ventas"><div class="mod-body"><span class="sk sk-chart"></span></div></section>
     </div>
-  </ng-container>
-
-  <ng-template #cargando>
-    <div class="content" aria-busy="true" aria-label="Cargando resumen">
-      <div class="kpis sk-kpis">
-        <div class="kpi" *ngFor="let i of [1, 2, 3, 4]"><span class="sk sk-a"></span><span class="sk sk-b"></span></div>
-      </div>
-      <div class="panel"><span class="sk sk-chart"></span></div>
-    </div>
-  </ng-template>
+  }
 </div>

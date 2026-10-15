@@ -30,7 +30,7 @@ import { EstadoPedido } from '../models/models';
       @case ('entregado') {
         <svg viewBox="0 0 16 16" [attr.width]="size" [attr.height]="size" role="img" aria-label="Entregado">
           <circle cx="8" cy="8" r="7" fill="var(--st-entregado)" />
-          <path d="m5 8.2 2 2 4-4.2" fill="none" stroke="var(--surface)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="m5 8.2 2 2 4-4.2" fill="none" stroke="var(--on-mint)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       }
       @case ('cancelado') {

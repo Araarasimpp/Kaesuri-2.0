@@ -33,6 +33,8 @@ interface MenuItem {
   label: string;
   path: string;
   icon: string;
+  /** Sección del menú lateral */
+  grupo?: string;
 }
 
 /** Se usa si Configuración no tiene el valor (minutos sin uso antes de cerrar sesión). */
@@ -52,7 +54,7 @@ const MINUTOS_INACTIVIDAD = 30;
     AvisoInactividadComponent,
   ],
   templateUrl: './despachador-layout.component.html',
-  styleUrls: ['../../shared/pill-nav.scss', './despachador-layout.component.scss'],
+  styleUrls: ['../../shared/shell.scss', '../../shared/pill-nav.scss'],
 })
 export class DespachadorLayoutComponent implements OnInit, OnDestroy {
   collapsed = localStorage.getItem('sidebar-colapsado') === '1';

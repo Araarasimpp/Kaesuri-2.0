@@ -1,5 +1,5 @@
 .cuadres-admin-page {
-  padding: 28px 32px 48px;
+  padding: 14px 20px 32px;
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -8,14 +8,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .page-header h1 {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: var(--fs-xl);
+  letter-spacing: -0.02em;
+  font-weight: 800;
   margin: 0;
 }
 
@@ -27,7 +28,7 @@
 
 .filtro {
   padding: 9px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   border: 1px solid var(--k-border);
   background: var(--k-bg-alt);
   color: var(--k-text);
@@ -39,7 +40,7 @@
 .table-card {
   background: var(--k-card-bg);
   border: 1px solid var(--k-border);
-  border-radius: 14px;
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
@@ -94,18 +95,18 @@
 }
 
 .badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(232, 163, 61, 0.15);
-  color: var(--k-amber);
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--st-ruta-wash);
+  color: var(--st-ruta-text);
   white-space: nowrap;
 }
 
 .badge.confirmado {
-  background: rgba(47, 143, 130, 0.12);
-  color: var(--k-teal);
+  background: var(--st-entregado-wash);
+  color: var(--st-entregado-text);
 }
 
 .btn-confirmar {
@@ -113,8 +114,8 @@
   padding: 7px 14px;
   border-radius: 8px;
   border: none;
-  background: var(--k-ink);
-  color: var(--k-paper);
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -183,13 +184,13 @@
   font-weight: 600;
   padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(47, 143, 130, 0.12);
-  color: var(--k-teal);
+  background: var(--st-entregado-wash);
+  color: var(--st-entregado-text);
 }
 
 .pd-metodo.transferencia {
-  background: rgba(232, 163, 61, 0.15);
-  color: var(--k-amber);
+  background: var(--st-ruta-wash);
+  color: var(--st-ruta-text);
 }
 
 .pd-comprobante {
@@ -248,8 +249,7 @@
 .sin-cerrar {
   margin-bottom: 20px;
   border: 1px solid var(--k-border);
-  border-left: 3px solid var(--accent, #3e5bd9);
-  border-radius: 14px;
+  border-radius: var(--radius);
   background: var(--k-card-bg);
   overflow: hidden;
 }
@@ -285,7 +285,7 @@
 .error-cierre {
   margin: 0;
   padding: 8px 18px;
-  color: var(--danger, #c4321c);
+  color: var(--danger);
   font-size: 13px;
 }
 

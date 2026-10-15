@@ -49,8 +49,9 @@
   padding: 0 12px;
   border: none;
   border-radius: var(--radius-sm);
-  background: var(--text);
-  color: var(--bg);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;

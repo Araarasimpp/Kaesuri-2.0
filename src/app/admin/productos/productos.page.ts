@@ -8,13 +8,16 @@ import { ProductoFormComponent } from './producto-form/producto-form.component';
 import { Producto } from '../../shared/models/models';
 import { urlImagen } from '../../shared/imagenes/url-imagen';
 import { EsqueletoComponent } from '../../shared/esqueleto/esqueleto.component';
+import { IonIcon } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { add } from 'ionicons/icons';
 
 type TabFiltro = 'activos' | 'todos';
 
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [EsqueletoComponent, CommonModule, FormsModule, ProductoFormComponent],
+  imports: [EsqueletoComponent, CommonModule, FormsModule, ProductoFormComponent, IonIcon],
   templateUrl: './productos.page.html',
   styleUrls: ['./productos.page.scss', './productos-eliminar.scss'],
 })
@@ -45,7 +48,9 @@ export class ProductosPage implements OnInit, OnDestroy {
 
   private canal: RealtimeChannel | null = null;
 
-  constructor(private supabase: SupabaseService, private cdr: ChangeDetectorRef) {}
+  constructor(private supabase: SupabaseService, private cdr: ChangeDetectorRef) {
+    addIcons({ add });
+  }
 
   stockBajoUmbral = 5;
 

@@ -42,6 +42,61 @@ button {
 
 ::selection {
   background: var(--accent-soft);
+  color: var(--text);
+}
+
+input,
+textarea {
+  caret-color: var(--accent);
+}
+
+input[type='radio'] {
+  accent-color: var(--accent);
+}
+
+// Casillas del sistema: cuadradas, filete fino y relleno petróleo al marcarse
+input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+input[type='checkbox']:hover {
+  border-color: var(--accent);
+}
+
+input[type='checkbox']::after {
+  content: '';
+  width: 8px;
+  height: 4px;
+  margin-top: -2px;
+  border-left: 2px solid var(--on-accent);
+  border-bottom: 2px solid var(--on-accent);
+  transform: rotate(-45deg) scale(0);
+  transition: transform var(--dur) var(--ease);
+}
+
+input[type='checkbox']:checked {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+input[type='checkbox']:checked::after {
+  transform: rotate(-45deg) scale(1);
+}
+
+::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
 }
 
 :focus-visible {
@@ -51,17 +106,304 @@ button {
 
 a {
   color: var(--accent);
+  text-underline-offset: 3px;
 }
 
 /* Cifras alineadas en columnas: plata, cantidades, números de pedido */
 .num {
   font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* ---------- Mosaico ----------
+ * Módulo con filete y pestaña de encabezado petróleo:
+ *   <section class="mod">
+ *     <header class="mod-head"><h2 class="mod-tab">Pedidos</h2><span class="mod-meta">…</span></header>
+ *     …
+ *   </section>
+ */
+.mod {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color var(--dur) var(--ease);
+}
+
+.mod:hover,
+.mod:focus-within {
+  border-color: var(--border-strong);
+}
+
+.mod-head {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  min-height: 30px;
+  padding-right: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mod-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: -1px 0 -1px -1px;
+  padding: 0 10px;
+  border-radius: var(--radius) 0 0 0;
+  background: var(--tab-bg);
+  color: var(--tab-text);
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mod-tab ion-icon {
+  font-size: 13px;
+}
+
+.mod-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Acciones de la pestaña: discretas en reposo, completas al pasar o enfocar */
+.mod-acciones {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+.mod-acciones a,
+.mod-acciones button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.mod-acciones a:hover,
+.mod-acciones button:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .mod .mod-secundaria {
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .mod:hover .mod-secundaria,
+  .mod:focus-within .mod-secundaria {
+    opacity: 1;
+  }
+}
+
+/* Fila de cifras dentro de un módulo */
+.celdas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.celda {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 10px 12px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.celda + .celda {
+  border-left: 1px solid var(--border);
+}
+
+.celda-principal {
+  background: var(--accent-wash);
+}
+
+.celda-link {
+  transition: background var(--dur) var(--ease);
+}
+
+.celda-link:hover {
+  background: var(--hover);
+}
+
+.celda-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.celda-valor {
+  font-size: var(--fs-num);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.celda-principal .celda-valor {
+  color: var(--accent);
+}
+
+.celda-nota {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+/* Filas densas dentro de un módulo */
+.filas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.filas > li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--fs-sm);
+}
+
+.filas > li:last-child {
+  border-bottom: none;
+}
+
+.filas > li:not(.vacio-inline):hover {
+  background: var(--surface-2);
+}
+
+.filas > li.vacio-inline {
+  color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .celdas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .celda:nth-child(3) {
+    border-left: none;
+  }
+
+  .celda:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+  }
+
+  .celda-label {
+    font-size: 11px;
+  }
+
+  .celda-valor {
+    font-size: 20px;
+  }
+
+  .filas > li {
+    min-height: 44px;
+    font-size: var(--fs-md);
+  }
+}
+
+/* ---------- Insignias rectangulares ---------- */
+.ins {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 3px;
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  background: var(--st-pendiente-wash);
+  color: var(--text-soft);
+}
+
+.ins-ok {
+  background: var(--mint-wash);
+  color: var(--mint-text);
+}
+
+.ins-ruta {
+  background: var(--st-ruta-wash);
+  color: var(--st-ruta-text);
+}
+
+.ins-alerta {
+  background: var(--danger-wash);
+  color: var(--danger);
+}
+
+.ins-acento {
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+
+/* Destello menta cuando una cifra cambia en tiempo real */
+.destello {
+  animation: destello 900ms var(--ease);
+}
+
+@keyframes destello {
+  0% {
+    background: color-mix(in srgb, var(--mint) 45%, transparent);
+  }
+  100% {
+    background: transparent;
+  }
 }
 
 /* Scrollbars discretos en escritorio */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {

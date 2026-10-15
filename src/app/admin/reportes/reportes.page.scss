@@ -1,5 +1,5 @@
 .reportes-page {
-  padding: 28px 32px 48px;
+  padding: 14px 20px 32px;
 }
 
 .page-header {
@@ -12,14 +12,15 @@
 }
 
 .page-header h1 {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: var(--fs-xl);
+  letter-spacing: -0.02em;
+  font-weight: 800;
   margin: 0;
 }
 
 .btn-excel {
   padding: 10px 18px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   border: none;
   background: var(--k-teal);
   color: #fff;
@@ -37,7 +38,7 @@
 .filtros-card {
   background: var(--k-card-bg);
   border: 1px solid var(--k-border);
-  border-radius: 14px;
+  border-radius: var(--radius);
   padding: 16px 18px;
   margin-bottom: 20px;
   display: flex;
@@ -97,7 +98,7 @@
 .table-card {
   background: var(--k-card-bg);
   border: 1px solid var(--k-border);
-  border-radius: 14px;
+  border-radius: var(--radius);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -110,16 +111,18 @@ table {
 
 thead th {
   text-align: left;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  font-weight: 800;
   color: var(--k-text-soft);
-  padding: 14px 16px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--k-border);
   white-space: nowrap;
 }
 
 tbody td {
-  padding: 11px 16px;
+  padding: 7px 12px;
   font-size: 13px;
   border-bottom: 1px solid var(--k-border);
   white-space: nowrap;
@@ -144,31 +147,31 @@ tbody tr:last-child td {
 }
 
 .badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 999px;
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
   white-space: nowrap;
 }
 
 .badge-ok {
-  background: rgba(47, 143, 130, 0.12);
-  color: var(--k-teal);
+  background: var(--st-entregado-wash);
+  color: var(--st-entregado-text);
 }
 
 .badge-bajo {
-  background: rgba(232, 163, 61, 0.15);
-  color: var(--k-amber);
+  background: var(--st-ruta-wash);
+  color: var(--st-ruta-text);
 }
 
 .badge-info {
-  background: rgba(18, 21, 28, 0.08);
+  background: var(--st-pendiente-wash);
   color: var(--k-text-soft);
 }
 
 .badge-coral {
-  background: rgba(214, 95, 95, 0.12);
-  color: var(--k-coral);
+  background: var(--danger-wash);
+  color: var(--danger);
 }
 
 tfoot td {

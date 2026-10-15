@@ -4,13 +4,18 @@ import { RouterLink } from '@angular/router';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { inicioDiaColombia } from '../../shared/fecha-colombia';
 import { EsqueletoComponent } from '../../shared/esqueleto/esqueleto.component';
+import { EstadoIconComponent } from '../../shared/estado-icon/estado-icon.component';
+import { EstadoPedido } from '../../shared/models/models';
+import { IonIcon } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { add } from 'ionicons/icons';
 
 interface PedidoResumen {
   id: string;
   numero: number;
   cliente_nombre: string;
   total: number;
-  estado: string;
+  estado: EstadoPedido;
   created_at: string;
 }
 
@@ -23,7 +28,7 @@ interface CuadrePendiente {
 @Component({
   selector: 'app-inicio-despachador',
   standalone: true,
-  imports: [EsqueletoComponent, CommonModule, RouterLink],
+  imports: [EsqueletoComponent, CommonModule, RouterLink, IonIcon, EstadoIconComponent],
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
 })
@@ -39,7 +44,9 @@ export class InicioDespachadorPage implements OnInit {
   cuadresPendientes: CuadrePendiente[] = [];
   nombresPorId = new Map<string, string>();
 
-  constructor(private supabase: SupabaseService, private cdr: ChangeDetectorRef) {}
+  constructor(private supabase: SupabaseService, private cdr: ChangeDetectorRef) {
+    addIcons({ add });
+  }
 
   async ngOnInit(): Promise<void> {
     await this.cargar();
@@ -111,15 +118,6 @@ export class InicioDespachadorPage implements OnInit {
     return etiquetas[estado] ?? estado;
   }
 
-  claseEstado(estado: string): string {
-    const clases: Record<string, string> = {
-      pendiente: 'badge-bajo',
-      en_ruta: 'badge-info',
-      entregado: 'badge-ok',
-      cancelado: 'badge-coral',
-    };
-    return clases[estado] ?? '';
-  }
 
   formatoMoneda(valor: number): string {
     return valor.toLocaleString('es-CO', {

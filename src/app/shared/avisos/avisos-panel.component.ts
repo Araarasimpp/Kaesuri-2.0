@@ -77,9 +77,9 @@ import { NotificacionesService, Aviso } from '../../core/services/notificaciones
   `,
   styles: [
     `
-      .fondo { position: fixed; inset: 0; z-index: 140; border: none; padding: 0; background: rgba(15, 16, 19, 0.2); }
+      .fondo { position: fixed; inset: 0; z-index: 140; border: none; padding: 0; background: rgba(14, 35, 41, 0.2); }
       .panel {
-        position: fixed; z-index: 141; left: 240px; bottom: 16px; width: 380px;
+        position: fixed; z-index: 141; left: calc(var(--sidebar-w, 224px) + 8px); bottom: 16px; width: 380px;
         --panel-max: min(560px, calc(100vh - 32px)); max-height: var(--panel-max); display: flex; flex-direction: column;
         background: var(--surface); color: var(--text); border: 1px solid var(--border);
         border-radius: var(--radius-lg); box-shadow: var(--shadow-pop); overflow: hidden;
@@ -108,7 +108,7 @@ import { NotificacionesService, Aviso } from '../../core/services/notificaciones
       /* el texto se acomoda en varias líneas y el botón nunca se sale del recuadro */
       .estado-avisos .permiso-ok { margin: 0; flex: 1 1 auto; min-width: 0; line-height: 1.35; }
       .estado-avisos .link-off { flex: 0 0 auto; }
-      .permiso-ok { flex-shrink: 0; margin: 10px 14px 0; font-size: 12px; color: var(--st-entregado); }
+      .permiso-ok { flex-shrink: 0; margin: 10px 14px 0; font-size: 12px; color: var(--st-entregado-text); }
       .link-off { color: var(--text-soft); white-space: nowrap; text-decoration: underline; }
       .link-off:disabled, .permiso button:disabled { opacity: .6; cursor: progress; }
       .link { border: none; background: none; padding: 4px 0; color: var(--accent); font-size: 12px; font-weight: 500; cursor: pointer; }

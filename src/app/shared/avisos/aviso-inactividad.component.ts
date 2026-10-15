@@ -21,7 +21,7 @@ import { InactividadService } from '../../core/services/inactividad.service';
   `,
   styles: [
     `
-      .fondo { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(15, 16, 19, 0.5); }
+      .fondo { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(14, 35, 41, 0.5); }
       .caja { width: 100%; max-width: 360px; padding: 20px; border-radius: 14px; background: var(--surface); color: var(--text); box-shadow: var(--shadow-pop); text-align: center; }
       h2 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
       p { margin: 0 0 16px; font-size: 14px; line-height: 1.5; color: var(--text-soft); }

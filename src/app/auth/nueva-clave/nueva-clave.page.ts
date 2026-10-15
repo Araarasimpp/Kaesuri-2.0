@@ -5,13 +5,14 @@ import { Router, RouterLink } from '@angular/router';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { EvaluacionClave, evaluarClave, vecesFiltrada } from '../../shared/seguridad/clave';
 import { MedidorClaveComponent } from '../../shared/seguridad/medidor-clave.component';
+import { AuthMarcaComponent } from '../marca/auth-marca.component';
 
 type Estado = 'verificando' | 'listo' | 'invalido';
 
 @Component({
   selector: 'app-nueva-clave',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MedidorClaveComponent],
+  imports: [CommonModule, FormsModule, RouterLink, AuthMarcaComponent, MedidorClaveComponent],
   templateUrl: './nueva-clave.page.html',
   styleUrls: ['../auth-shell.scss'],
 })

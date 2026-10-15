@@ -92,7 +92,7 @@ import { SupabaseService } from '../../core/services/supabase.service';
       .btn-peligro { color: var(--danger); }
       .btn:disabled { opacity: 0.6; cursor: progress; }
       .error { margin: 0; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--danger-wash); color: var(--danger); font-size: 13px; }
-      .ok { margin: 0; font-size: 13px; color: var(--st-entregado); font-weight: 500; }
+      .ok { margin: 0; font-size: 13px; color: var(--st-entregado-text); font-weight: 500; }
     `,
   ],
 })
